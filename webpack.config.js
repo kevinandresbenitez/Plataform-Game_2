@@ -3,12 +3,32 @@ const HtmlWebpackPlugin =require('html-webpack-plugin');
 
 module.exports = {
     entry: __dirname + '/src/index.js',
-    mode :"production",
+    mode :"development",
 
     output: {
         path: path.resolve(__dirname, 'build'),
         filename: 'bundle.js',
     },
+
+    module: {
+        rules: [
+          {
+            test: /\.css$/i,
+            use: ["style-loader", "css-loader"],
+          },
+          {
+            test: /\.less$/i,
+            use: [
+              // compiles Less to CSS
+              "style-loader",
+              "css-loader",
+              "less-loader",
+            ],
+          },
+
+        ],
+      },
+
 
 
     devServer: {
