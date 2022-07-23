@@ -19,9 +19,8 @@ class Home extends MainClass.Menu{
         // Add selecteableElements
         this.#selectableElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight'},class:'selected',location:this.#domElement});
         // Add items
-        this.selectableElements.addElements(document.createElement('div'));
-        this.selectableElements.addElements(document.createElement('div'));
-        this.selectableElements.addElements(document.createElement('div'));
+        this.selectableElements.addElements(Utils.createElementDom({className:'btn-init',element:'button'}));
+        this.selectableElements.addElements(Utils.createElementDom({className:'btn-config',element:'button'}));
         this.selectableElements.ActivateKeys();
     }
 

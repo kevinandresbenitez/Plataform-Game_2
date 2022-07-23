@@ -41,6 +41,8 @@ module.exports = class SelectableElements{
         }else{
             throw new Error('Function need dom Element');
         }
+        
+        this.UpdateChanges();
     }
 
 

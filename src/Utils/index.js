@@ -39,7 +39,7 @@ module.exports = class Utils{
 
 
 // function from windows default class 'keepRadioAspect'
-function resizeWindow(event){
+function resizeWindow(){
   let heightWindow = window.innerHeight;
   let widthWindow = window.innerWidth;
   let containers = document.querySelectorAll('.keepRadioAspect');
@@ -55,5 +55,5 @@ function resizeWindow(event){
   })
   
 }
-
-window.addEventListener('resize',(event)=>{resizeWindow(event)})
+window.addEventListener('load',()=>{resizeWindow()})
+window.addEventListener('resize',(event)=>{resizeWindow()})
