@@ -29,29 +29,31 @@ module.exports = class Utils{
     }
 
     static existsDomElement=(element)=>{
-      return (typeof element === "object" && document.contains(element));
+      return (this.isDomElement(element) && document.contains(element));
+    }
+
+    static isDomElement(element){
+      return (typeof element === "object");
     }
 }
 
 
-// function from windows default
-
+// function from windows default class 'keepRadioAspect'
 function resizeWindow(event){
   let heightWindow = window.innerHeight;
   let widthWindow = window.innerWidth;
-  let container = document.querySelector('.home');
+  let containers = document.querySelectorAll('.keepRadioAspect');
 
-  if((widthWindow / heightWindow) > 1.768){
-    container.style.width = 'auto';
-    container.style.height ='100%';
-  }else{
-    container.style.width = '100%';
-    container.style.height ='auto';
-  }
-
+  containers.forEach((container)=>{
+    if((widthWindow / heightWindow) > 1.768){
+      container.style.width = 'auto';
+      container.style.height ='100%';
+    }else{
+      container.style.width = '100%';
+      container.style.height ='auto';
+    }
+  })
   
-
-
 }
 
 window.addEventListener('resize',(event)=>{resizeWindow(event)})

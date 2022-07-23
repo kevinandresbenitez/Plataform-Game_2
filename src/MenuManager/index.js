@@ -1,64 +1,39 @@
 let Utils = require('../Utils/index');
-
-class Menu{
-
-    // location : location where the object will be worked , Required
-    #location;
-
-    constructor(props){
-        let {location} = props || false;
-
-        if(!location || !Utils.existsDomElement(location)){
-            throw new Error("Error in the constructor Menu,'location' not found or does not exist");
-        }
-
-        this.#location = props.location;
-    }
+let MainClass = require('./MainClass/index.js')
+let SelectableElements=require('./SelectableElements/index.js');
 
 
-    set location(value){
-        throw new Error("Error location cant change, is defined in the constructor ");
-    }
-    get location(){
-        return this.#location;
-    }
-
-
-    create = ()=>{
-        this.location.appendChild(this.domElement);
-    }
-
-    delete = ()=>{
-        this.location.removeChild(this.domElement);
-    }
-
-
-    show = ()=>{
-        this.domElement.classList.remove('hidde');
-    }
-
-    hidde = ()=>{
-        this.domElement.classList.add('hidde');
-    }
-    
-    isOpen = ()=>{
-        return false;
-    }
-}
-
-class Home extends Menu{
+// Sections
+class Home extends MainClass.Menu{
     // Dom element created for the class
     #domElement;
+    #selectableElements;
 
     constructor(props){
         super(props);
-        this.#domElement = Utils.createElementDom({className:'home',element:'div'});
+        this.#domElement = Utils.createElementDom({className:'home keepRadioAspect',element:'div'});
     }
+
+    // Add element in the domElement
+    addElements=()=>{
+        // Add selecteableElements
+        this.#selectableElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight'},class:'selected',location:this.#domElement});
+        // Add items
+        this.selectableElements.addElements(document.createElement('div'));
+        this.selectableElements.addElements(document.createElement('div'));
+        this.selectableElements.addElements(document.createElement('div'));
+        this.selectableElements.ActivateKeys();
+    }
+
+
 
     get domElement(){   
         return this.#domElement;
     }
 
+    get selectableElements(){   
+        return this.#selectableElements;
+    }
     
 }
 
