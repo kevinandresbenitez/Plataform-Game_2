@@ -8,52 +8,53 @@
     align-items:flex-start;
     justify-content: center;
 
-    .btn-init{
-        display: block;
-        width: 250px;
-        height: 50px;
-        position :relative;
-        margin-bottom: 5rem;
-        margin-left: 5rem;
 
-        border: none;
+
+    .btn-init{
+        width:15.625vw;
+        height:5.5vh;
         background: url('../../../images/Comenzar.png');
-        background-size: contain;
-        background-repeat: no-repeat;
-        background-position:center;
-        transition: all 0.2s;
     }
 
     .btn-config{
+        width: 36.25vw;
+        height: 5.5vh;
+        background: url('../../../images/Configuracion.png');
+    }
+
+    .btn-init , .btn-config{
         display: block;
-        width: 580px;
-        height: 50px;
+        margin-top:6vh;
+        margin-bottom:6vh;
+        margin-left: 6vw;
         position :relative;
-        margin-top: 5rem;
-        margin-left: 5rem;
 
         border: none;
-        background: url('../../../images/Configuracion.png');
-
-        background-size: contain;
+        background-size:contain;
         background-repeat: no-repeat;
         background-position:center;
         transition: all 0.2s;
     }
 
+
     .selected{
-        margin-left: 8rem;
+        margin-left: 10vw;
         transition: all 0.2s;
     }
 
     .selected::after{
         content: '';
         top: 0;
-        left: -5rem;
+        left: -5vw;
         position: absolute;
-        width: 50px;
-        height: 50px;
+
+        width:3.125vw;
+        height:5.5vh;
+
         background: url('../../../images/Arrow.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position:center;
     }
 
 
