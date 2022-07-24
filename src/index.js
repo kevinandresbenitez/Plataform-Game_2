@@ -9,7 +9,6 @@ class main {
     static init=()=>{
         let home = new MenuManager.Home({location:document.querySelector('.container')});
         home.create();
-        home.addElements();
         
     }
 

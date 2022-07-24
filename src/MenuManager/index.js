@@ -14,8 +14,10 @@ class Home extends MainClass.Menu{
         this.#domElement = Utils.createElementDom({className:'home keepRadioAspect',element:'div'});
     }
 
-    // Add element in the domElement
-    addElements=()=>{
+
+    create(){
+        super.create();
+
         // Add selecteableElements
         this.#selectableElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight'},class:'selected',location:this.#domElement});
         // Add items

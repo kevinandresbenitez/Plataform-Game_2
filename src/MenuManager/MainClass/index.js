@@ -21,7 +21,7 @@ class Menu{
     }
 
 
-    create = ()=>{
+    create(){
         this.location.appendChild(this.domElement);
     }
 
