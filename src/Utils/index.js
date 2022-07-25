@@ -14,6 +14,11 @@ module.exports = class Utils{
         newElement.id = id 
       }
 
+      // Add function  if exist
+      if(props.onClick){
+        newElement.onclick = ()=>{props.onClick()};
+      }
+      
       
   
       //If have style object , separate keys and values and set in the new element

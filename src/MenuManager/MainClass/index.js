@@ -29,23 +29,12 @@ class Menu{
         this.location.removeChild(this.domElement);
     }
 
+    addElements=(element)=>{
+        this.domElement.appendChild(element);
+    }
+
 
     
 }
- 
 
-class ModalMenu extends Menu {
-     show = ()=>{
-         this.domElement.classList.remove('hidde');
-     }
-
-     hidde = ()=>{
-         this.domElement.classList.add('hidde');
-     }
-    
-     isOpen = ()=>{
-         return false;
-     }
-}
-
-module.exports={Menu,ModalMenu};
+module.exports={Menu};

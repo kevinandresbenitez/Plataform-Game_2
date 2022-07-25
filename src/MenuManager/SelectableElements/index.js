@@ -9,7 +9,6 @@ module.exports = class SelectableElements{
     className;
 
     constructor(props){
-        let {KeySelectPrev,KeySelectNext} = props.keys;
         this.elementSelected = props.elementSelected || 0;
         this.Keys =props.keys;
         this.className = props.className || 'selected';
@@ -94,6 +93,11 @@ module.exports = class SelectableElements{
             case (this.Keys.KeySelectPrev):
                 this.selectPrevElement();
                 this.UpdateChanges();
+            break
+
+            case (this.Keys.Open):
+                // activate functions for element selected  if have
+                this.#elements[this.elementSelected].click();
             break
         }
     }
