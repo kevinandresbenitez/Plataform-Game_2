@@ -40,25 +40,22 @@ module.exports = class Utils{
     static isDomElement(element){
       return (typeof element === "object");
     }
-}
 
-
-// function from windows default class 'keepRadioAspect'
-function resizeWindow(){
-  let heightWindow = window.innerHeight;
-  let widthWindow = window.innerWidth;
-  let containers = document.querySelectorAll('.keepRadioAspect');
-
-  containers.forEach((container)=>{
-    if((widthWindow / heightWindow) > 1.768){
-      container.style.width = 'auto';
-      container.style.height ='100%';
-    }else{
-      container.style.width = '100%';
-      container.style.height ='auto';
+    // function from windows default class 'keepRadioAspect'
+    static resizeWindow(){
+      let heightWindow = window.innerHeight;
+      let widthWindow = window.innerWidth;
+      let containers = document.querySelectorAll('.keepRadioAspect');
+    
+      containers.forEach((container)=>{
+        if((widthWindow / heightWindow) > 1.768){
+          container.style.width = 'auto';
+          container.style.height ='100%';
+        }else{
+          container.style.width = '100%';
+          container.style.height ='auto';
+        }
+      })
+      
     }
-  })
-  
 }
-window.addEventListener('load',()=>{resizeWindow()})
-window.addEventListener('resize',(event)=>{resizeWindow()})

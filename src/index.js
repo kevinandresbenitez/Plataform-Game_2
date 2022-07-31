@@ -1,4 +1,5 @@
 let MenuManager = require('./MenuManager/index');
+let Utils = require('./Utils/index.js');
 
 // Import css Styles
 require('normalize.css');
@@ -12,9 +13,12 @@ class main {
         
     }
 
-
-
 }
 
 
 main.init();
+
+
+// On document load 
+window.addEventListener('load',()=>{Utils.resizeWindow()})
+window.addEventListener('resize',(event)=>{Utils.resizeWindow()})

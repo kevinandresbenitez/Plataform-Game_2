@@ -1,6 +1,6 @@
 let Utils = require('../Utils/index');
 let MainClass = require('./MainClass/index.js')
-let SelectableElements =require('./SelectableElements/index.js');
+let SelectableElements =require('../Utils/SelecteableElements/index.js');
 
 
 // Sections
@@ -22,24 +22,42 @@ class Home extends MainClass.Menu{
         // Add selecteableElements
         this.#MenuElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.#domElement});
         // Add items
-        this.MenuElements.addElements(Utils.createElementDom({className:'btn-init',element:'button'}));
-        this.MenuElements.addElements(Utils.createElementDom({className:'btn-config',element:'button',onClick:this.openConfig}));
+        this.MenuElements.addElements(Utils.createElementDom({className:'btn-init',element:'button',onClick:this.functions.openLevelSelector}));
+        this.MenuElements.addElements(Utils.createElementDom({className:'btn-config',element:'button',onClick:this.functions.openConfig}));
         this.MenuElements.ActivateKeys();
     }
 
-    openConfig=()=>{
-        this.MenuElements.DisableKeys();
-        // Create Modal
-        let ConfigModal = new HomeConfig({location:this.#domElement});
-        ConfigModal.onDelete = ()=>{this.MenuElements.ActivateKeys()};
-        ConfigModal.create();
+    functions={
+        openConfig:()=>{
+            this.MenuElements.DisableKeys();
+            // Create Modal
+            let ConfigModal = new HomeConfig({location:this.#domElement});
+            ConfigModal.onDelete = ()=>{this.MenuElements.ActivateKeys()};
+            ConfigModal.create();
+        },
+
+        openLevelSelector:()=>{
+            // Create Level Selector Section
+            this.hidde();
+    
+            let levelSelector = new LevelSelector({location:document.querySelector('.container'),showHome:this.show});
+            levelSelector.create();
+        }
     }
 
+    hidde =()=>{
+        this.domElement.style.display = 'none';
+        this.MenuElements.DisableKeys();
+    }
+
+    show =()=>{
+        this.domElement.style.display = 'flex';
+        this.MenuElements.ActivateKeys();
+    }
 
     get domElement(){   
         return this.#domElement;
     }
-
     get MenuElements(){   
         return this.#MenuElements;
     }
@@ -90,6 +108,54 @@ class HomeConfig extends MainClass.Menu{
     get ConfigElements(){
         return this.#ConfigElements;
     }
+
+}
+
+class LevelSelector extends MainClass.Menu{
+    #domElement;
+    #LevelSelectorElements;
+    // function to return home
+    showHome;
+
+    constructor(props){
+        super(props);
+        this.#domElement = Utils.createElementDom({className:'levelSelector keepRadioAspect',element:'div'});
+        this.showHome = props.showHome;
+    }
+
+    create(){
+        super.create();
+        Utils.resizeWindow();
+        
+
+        this.#LevelSelectorElements =  new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.#domElement});
+        this.LevelSelectorElements.addElements(Utils.createElementDom({className:'start-game',element:'button'}));
+        this.LevelSelectorElements.addElements(Utils.createElementDom({className:'exit',element:'button',onClick:this.functions.returnHome}));
+        this.LevelSelectorElements.addElements(Utils.createElementDom({className:'carrusel-levels',element:'div'}));
+
+        this.LevelSelectorElements.ActivateKeys();
+
+    }
+
+     
+
+    functions={
+        returnHome:()=>{
+            this.LevelSelectorElements.DisableKeys();
+            this.delete();
+            this.showHome();
+        }
+    }
+
+
+    get domElement(){   
+        return this.#domElement;
+    }
+
+    get LevelSelectorElements(){
+        return this.#LevelSelectorElements;
+    }
+
 
 }
 
