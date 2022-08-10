@@ -17,10 +17,7 @@ class main {
 }
 
 
-// main.init();
-let le = new LevelLoader({location:document.querySelector('.container')});
-le.create()
-le.drawBlocks(le.getBlocksForLevel(1));
+main.init();
 
 // On document load 
 window.addEventListener('load',()=>{Utils.resizeWindow()})
