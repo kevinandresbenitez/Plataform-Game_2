@@ -1,5 +1,6 @@
 let MenuManager = require('./MenuManager/index');
 let Utils = require('./Utils/index.js');
+let LevelLoader =require('./LevelLoader/index.js');
 
 // Import css Styles
 require('normalize.css');
@@ -16,8 +17,10 @@ class main {
 }
 
 
-main.init();
-
+// main.init();
+let le = new LevelLoader({location:document.querySelector('.container')});
+le.create()
+le.drawBlocks(le.getBlocksForLevel(1));
 
 // On document load 
 window.addEventListener('load',()=>{Utils.resizeWindow()})
