@@ -34,19 +34,11 @@ module.exports = {
                 presets: ['@babel/preset-env']
               }
             }
-          },
+          },     
           {
-          test: /\.(png|jpe?g|gif)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                esModule: false,
-                },
-            },
-          ],
-        },
-
+            test: /\.png/,
+            type: 'asset/resource'
+          }
         ],
       },
 
