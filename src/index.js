@@ -1,6 +1,6 @@
 let MenuManager = require('./MenuManager/index');
 let Utils = require('./Utils/index.js');
-let LevelLoader =require('./LevelLoader/index.js');
+
 
 // Import css Styles
 require('normalize.css');

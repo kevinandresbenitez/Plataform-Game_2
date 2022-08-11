@@ -17,17 +17,6 @@ class LevelLoader{
         }
         this.#location = props.location;
         this.#domElement = Utils.createElementDom({className:'game-container keepRadioAspect',element:'div'});
-
-
-        // add canvas elements
-        this.#CanvasContainer =Utils.createElementDom({className:'canvas-container',element:'div'})
-        this.#CanvasScene =Utils.createElementDom({className:'canvas-Scene keepRadioAspect',element:'canvas'});
-        this.#CanvasContainer.appendChild(this.#CanvasScene);
-        
-        this.#CanvasScene.width =window.innerWidth;
-        this.#CanvasScene.height =window.innerHeight;
-
-        this.#domElement.appendChild(this.#CanvasContainer);
     }
     
     create(){
@@ -84,10 +73,38 @@ class LevelLoader{
 
     }
 
-    drawBlocks(Blocks){
+    getLenghtForLevel(level){
+        // verify level exist
+        if(!(Levels[level - 1])){
+            throw new Error('Level not exist');
+        }
+
+        let count=0;
+        Levels[level -1 ].level.forEach((mosaic)=>{
+            count +=mosaic[0].length;
+        })
+
+        return count;
+    }
+
+    drawBlocks(Blocks,lenghtLevel){
+        
+        // add canvas elements
+        this.#CanvasContainer =Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
+        this.#CanvasScene =Utils.createElementDom({className:'canvas-Scene',element:'canvas'});
+        
+        
+        // add dimentions for the containers
+        this.#CanvasContainer.style.width =this.getLenghtForLevel(1) * 40 + "px";
+        this.#CanvasScene.width =this.getLenghtForLevel(1) * 40;
+        this.#CanvasScene.height =900;
+
+        this.#CanvasContainer.appendChild(this.#CanvasScene);
+        this.#domElement.appendChild(this.#CanvasContainer);
+
+
         // draw Allblocks
         let canvasContext = this.CanvasScene.getContext('2d');
-        console.log(Blocks)   
 
         Blocks.forEach((mosaic)=>{
 
@@ -101,8 +118,6 @@ class LevelLoader{
             
             
         })
-
-
 
     }
 
