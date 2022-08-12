@@ -57,6 +57,51 @@ class LevelLoader{
                     if(item == 1){
                         Mosaic.push(new Blocks.SolidBlock(x,y,40));
                     }
+                    
+                    // No solid block
+                    if(item == 2){
+                        Mosaic.push(new Blocks.NoSolidBlock(x,y,40));
+                    }
+
+                    x += 40;
+                })        
+                x=0;
+                y += 40;
+            })
+            
+            allBlocks.push(Mosaic);
+            Mosaic =[];
+            MosaicX += mosaic[0].length * 40;
+        })
+
+        return allBlocks;
+
+    }
+
+    getCollisionBlocksForLevel(level){
+        // verify level exist
+        if(!(Levels[level - 1])){
+            throw new Error('Level not exist');
+        }
+
+
+
+        let allBlocks = [];
+        let Mosaic =[];
+
+        // Foreach mosaics
+        let MosaicX = 0;
+        Levels[level-1].level.forEach((mosaic)=>{
+            let y =0;
+            
+            mosaic.forEach((fila)=>{
+                let x = MosaicX;
+                fila.forEach((item)=>{
+                    // Solid block
+                    if(item == 1){
+                        Mosaic.push(new Blocks.SolidBlock(x,y,40));
+                    }
+                    
                     x += 40;
                 })
 
@@ -66,11 +111,31 @@ class LevelLoader{
             
             allBlocks.push(Mosaic);
             Mosaic =[];
-            MosaicX = mosaic[0].length * 40;
+            MosaicX += mosaic[0].length * 40;
         })
 
         return allBlocks;
+    }
 
+    getCollisionMosaicLenghtsForLevel(level){
+    // verify level exist
+    if(!(Levels[level - 1])){
+        throw new Error('Level not exist');
+    }
+
+    let Mosaic =[];
+
+    // Foreach mosaics
+    let x= 0;
+    Levels[level-1].level.forEach((mosaic)=>{
+        mosaic.forEach((fila)=>{
+            x = fila.length * 40 ;
+        })
+        Mosaic.push(x);
+        x=0;
+    })
+
+    return Mosaic;
     }
 
     getLenghtForLevel(level){
@@ -87,7 +152,7 @@ class LevelLoader{
         return count;
     }
 
-    drawBlocks(Blocks,lenghtLevel){
+    drawBlocks(Blocks){
         
         // add canvas elements
         this.#CanvasContainer =Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});

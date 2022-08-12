@@ -14,4 +14,11 @@ class SolidBlock extends Block{
     }
 }
 
-module.exports={SolidBlock}
+class NoSolidBlock extends Block{
+    constructor(x,y,lenght){
+        super(x,y,lenght);
+        this.img = blockImg;
+    }
+}
+
+module.exports={SolidBlock,NoSolidBlock}
