@@ -19,6 +19,7 @@ class main {
 
 main.init();
 
+
 // On document load 
 window.addEventListener('load',()=>{Utils.resizeWindow()})
 window.addEventListener('resize',(event)=>{Utils.resizeWindow()})

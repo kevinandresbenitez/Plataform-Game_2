@@ -24,8 +24,8 @@ class LevelLoader{
         this.#CanvasScene =Utils.createElementDom({className:'canvas-Scene keepRadioAspect',element:'canvas'});
         this.#CanvasContainer.appendChild(this.#CanvasScene);
         
-        this.#CanvasScene.width =window.innerWidth;
-        this.#CanvasScene.height =window.innerHeight;
+        this.#CanvasScene.width =1600;
+        this.#CanvasScene.height =900;
 
         this.#domElement.appendChild(this.#CanvasContainer);
     }
@@ -87,7 +87,6 @@ class LevelLoader{
     drawBlocks(Blocks){
         // draw Allblocks
         let canvasContext = this.CanvasScene.getContext('2d');
-        console.log(Blocks)   
 
         Blocks.forEach((mosaic)=>{
 
