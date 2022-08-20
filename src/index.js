@@ -1,3 +1,4 @@
+const LevelLoader = require('./LevelLoader');
 let MenuManager = require('./MenuManager/index');
 let Utils = require('./Utils/index.js');
 
@@ -17,8 +18,12 @@ class main {
 }
 
 
-main.init();
+// main.init();
+let le = new LevelLoader({location:document.querySelector('.container')});
+le.create();
+le.drawBlocks(le.getBlocksForLevel(1));
+
 
 // On document load 
-window.addEventListener('load',()=>{Utils.resizeWindow()})
+window.addEvent//Listener('load',()=>{Utils.resizeWindow()})
 window.addEventListener('resize',(event)=>{Utils.resizeWindow()})

@@ -166,7 +166,8 @@ class LevelLoader{
 
         this.#CanvasContainer.appendChild(this.#CanvasScene);
         this.#domElement.appendChild(this.#CanvasContainer);
-
+        //Resize window
+        Utils.resizeWindow();
 
         // draw Allblocks
         let canvasContext = this.CanvasScene.getContext('2d');
