@@ -8,7 +8,8 @@ class LevelLoader{
     #location;
     #domElement;
     #CanvasContainer;
-    #CanvasScene;
+    #CanvasStaticElements;
+    #CanvasDinamicElements;
 
     constructor(props){
         let {location} = props || false;
@@ -23,8 +24,38 @@ class LevelLoader{
         this.location.appendChild(this.domElement);
     }
 
-    get CanvasScene(){
-        return this.#CanvasScene;
+    createCanvasForLevel(level){
+
+        // add canvas elements
+        this.#CanvasContainer =Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
+        this.#CanvasStaticElements =Utils.createElementDom({className:'canvas-StaticElements',element:'canvas'});
+        this.#CanvasDinamicElements =Utils.createElementDom({className:'canvas-DinamicElements',element:'canvas'});
+        
+        
+        // add dimentions for the container
+        this.#CanvasContainer.style.width =this.getLenghtForLevel(level) * 40 + "px";
+        // add dimentions for the canvas
+        this.#CanvasStaticElements.width =this.getLenghtForLevel(level) * 40;
+        this.#CanvasStaticElements.height =900;
+        
+        this.#CanvasDinamicElements.width =this.getLenghtForLevel(level) * 40;
+        this.#CanvasDinamicElements.height =900;
+
+        //Add elements in the dom
+        this.#CanvasContainer.appendChild(this.#CanvasStaticElements);
+        this.#CanvasContainer.appendChild(this.#CanvasDinamicElements);
+        this.#domElement.appendChild(this.#CanvasContainer);
+        //Resize window
+        Utils.resizeWindow();
+    }
+
+
+    get CanvasStaticElements(){
+        return this.#CanvasStaticElements;
+    }
+
+    get CanvasDinamicElements(){
+        return this.#CanvasDinamicElements;
     }
 
     get location (){
@@ -153,24 +184,8 @@ class LevelLoader{
     }
 
     drawBlocks(Blocks){
-        
-        // add canvas elements
-        this.#CanvasContainer =Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
-        this.#CanvasScene =Utils.createElementDom({className:'canvas-Scene',element:'canvas'});
-        
-        
-        // add dimentions for the containers
-        this.#CanvasContainer.style.width =this.getLenghtForLevel(1) * 40 + "px";
-        this.#CanvasScene.width =this.getLenghtForLevel(1) * 40;
-        this.#CanvasScene.height =900;
-
-        this.#CanvasContainer.appendChild(this.#CanvasScene);
-        this.#domElement.appendChild(this.#CanvasContainer);
-        //Resize window
-        Utils.resizeWindow();
-
         // draw Allblocks
-        let canvasContext = this.CanvasScene.getContext('2d');
+        let canvasContext = this.CanvasStaticElements.getContext('2d');
 
         Blocks.forEach((mosaic)=>{
 
@@ -187,6 +202,12 @@ class LevelLoader{
 
     }
 
+
+    loadLevel(level){
+        // create Level
+        this.createCanvasForLevel(level);
+        this.drawBlocks(this.getBlocksForLevel(level));
+    }
 }
 
 module.exports = LevelLoader

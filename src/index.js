@@ -18,7 +18,10 @@ class main {
 }
 
 
-main.init();
+// main.init();
+let le = new LevelLoader({location:document.querySelector('.container')});
+le.create();
+le.loadLevel(1)
 
 
 // On document load 
