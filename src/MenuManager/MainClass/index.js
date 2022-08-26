@@ -23,6 +23,7 @@ class Menu{
 
     create(){
         this.location.appendChild(this.domElement);
+        Utils.resizeWindow();
     }
 
     delete = ()=>{

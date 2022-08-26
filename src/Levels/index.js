@@ -1,6 +1,9 @@
+let Player = require('../Items/Player.js');
+
 let levels =[
     {
         name:'Level 1',
+        elements:[new Player({position:{x:50,y:50}}),new Player({position:{x:200,y:200}})],
         level:[
             [   
                 [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1], 

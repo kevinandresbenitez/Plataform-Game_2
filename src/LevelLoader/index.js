@@ -11,6 +11,10 @@ class LevelLoader{
     #CanvasStaticElements;
     #CanvasDinamicElements;
 
+    // User-enemiest-blocks are loaded here
+    #DinamicElements = [];
+    #StaticElements = [];
+
     constructor(props){
         let {location} = props || false;
         if(!location || !Utils.existsDomElement(location)){
@@ -25,7 +29,6 @@ class LevelLoader{
     }
 
     createCanvasForLevel(level){
-
         // add canvas elements
         this.#CanvasContainer =Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
         this.#CanvasStaticElements =Utils.createElementDom({className:'canvas-StaticElements',element:'canvas'});
@@ -204,9 +207,77 @@ class LevelLoader{
 
 
     loadLevel(level){
-        // create Level
+        // Load Elements for the level
+        this.loadDinamcElementsForLevel(level);
+        this.loadStaticElementsForLevel(level);
+
+        // Create the canvas static and dinamic ;
         this.createCanvasForLevel(level);
-        this.drawBlocks(this.getBlocksForLevel(level));
+
+        // create Level
+        this.renderStaticElements();
+        this.renderDinamicElements();
+    }
+
+    getDinamicElementsForLevel=(level)=>{
+        // verify level exist
+        if(!(Levels[level - 1])){
+            throw new Error('Level not exist');
+        }
+        
+        return (Levels[level - 1].elements);
+    }
+
+    // Load elements for the lever and push in a globar var
+    loadDinamcElementsForLevel=(level)=>{
+        // Load personajes - enemies for level
+        this.#DinamicElements = Object.values(this.getDinamicElementsForLevel(level));
+    }
+    loadStaticElementsForLevel=(level)=>{
+        // Load blocks for level
+        this.#StaticElements = this.getBlocksForLevel(level);
+    }
+
+    // Draw elements in canvas static and dinamic
+    renderStaticElements=()=>{
+        // Render static elements
+        this.drawBlocks(this.#StaticElements);
+    }
+    renderDinamicElements= async ()=>{
+        let ContextCanvas = this.CanvasDinamicElements.getContext('2d');
+        ContextCanvas.clearRect(0, 0,1600,900);
+
+            // Get Dinamic images for render
+        let ImagesItems = await Promise.all(    
+            this.#DinamicElements.map(async(Item)=>{
+                return {
+                    imagen :await Item.Animation.getImgFrame(),
+                    width:60,
+                    height:80,
+                    position :{
+                        x:Item.position.x,
+                        y:Item.position.y,
+                    }
+                };
+            })
+        );
+
+            // Draw Images
+        ImagesItems.forEach((item)=>{
+            ContextCanvas.drawImage(item.imagen,item.position.x,item.position.y,item.width,item.height);
+        })
+        
+            // Ejecute gravity in elements
+        this.#DinamicElements.filter((item)=>{return item.gravity ? item.gravity:false}).forEach((item)=>{
+            item.position.y += item.getGravity;
+        })  
+
+
+        // Images are loaded and are draw, render new frame
+        if(ImagesItems){
+            window.requestAnimationFrame(this.renderDinamicElements);
+        }
+
     }
 }
 
