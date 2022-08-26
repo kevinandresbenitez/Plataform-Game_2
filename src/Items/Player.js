@@ -1,10 +1,10 @@
 
 let AnimationFrame = require('../Utils/AnimationFrame/index.js');
 
-let UserWaitRight0= require('../../public/images/Player/waitRight/0.png');
-let UserWaitRight1= require('../../public/images/Player/waitRight/1.png');
-let UserWaitRight2= require('../../public/images/Player/waitRight/2.png');
-let UserWaitRight3= require('../../public/images/Player/waitRight/3.png');
+let UserWaitRight0= require('../../public/Images/Player/waitRight/0.png');
+let UserWaitRight1= require('../../public/Images/Player/waitRight/1.png');
+let UserWaitRight2= require('../../public/Images/Player/waitRight/2.png');
+let UserWaitRight3= require('../../public/Images/Player/waitRight/3.png');
 
 module.exports = class Player{
 

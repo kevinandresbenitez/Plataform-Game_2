@@ -1,4 +1,4 @@
-let blockImg = require('../../public/images/Blocks/Block.png');
+let blockImg = require('../../public/Images/Blocks/Block.png');
 
 class Block{
     constructor(x,y,lenght){
