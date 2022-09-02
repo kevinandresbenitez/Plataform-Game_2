@@ -1,6 +1,5 @@
-const LevelLoader = require('./LevelLoader');
-let MenuManager = require('./MenuManager/index');
-let Utils = require('./Utils/index.js');
+const Utils = require('./Utils/index.js');
+const Home = require('./Menu Manager/Menus/Home');
 
 
 // Import css Styles
@@ -10,15 +9,16 @@ require('../public/less/index.less');
 class main {
 
     static init=()=>{
-        let home = new MenuManager.Home({location:document.querySelector('.container')});
+        let home = new Home({location:document.querySelector('.container')});
         home.create();
         
     }
 
 }
 
-
+// init Program
 main.init();
+
 
 
 // On document load 

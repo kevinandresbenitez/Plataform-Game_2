@@ -1,6 +1,6 @@
 module.exports = class Utils{
     static createElementDom = (props)=>{
-      let {className,id,style,img,element} = props;
+      let {className,id,style,element} = props;
       let newElement =document.createElement(element);
   
       // Set Classname split string

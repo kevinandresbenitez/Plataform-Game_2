@@ -1,6 +1,6 @@
 let Utils = require('../Utils/index.js');
-let Levels = require ('../Levels/index.js');
-let Blocks = require('../Blocks/index.js');
+let Levels = require ('../Game Elements/Levels/index.js');
+let Blocks = require('../Game Elements/Blocks/index.js');
 
 
 class LevelLoader{
