@@ -25,7 +25,7 @@ module.exports = class Home extends MainClass.Menu{
         // Add items
         this.MenuElements.addElements(Utils.createElementDom({className:'btn-init',element:'button',onClick:this.functions.openLevelSelector}));
         this.MenuElements.addElements(Utils.createElementDom({className:'btn-config',element:'button',onClick:this.functions.openConfig}));
-        this.MenuElements.ActivateKeys();
+        this.MenuElements.EnableKeys();
     }
 
     functions={
@@ -33,7 +33,7 @@ module.exports = class Home extends MainClass.Menu{
             this.MenuElements.DisableKeys();
             // Create Modal
             let ConfigModal = new HomeConfig({location:this.#domElement});
-            ConfigModal.onDelete = ()=>{this.MenuElements.ActivateKeys()};
+            ConfigModal.onDelete = ()=>{this.MenuElements.EnableKeys()};
             ConfigModal.create();
         },
 
@@ -53,7 +53,7 @@ module.exports = class Home extends MainClass.Menu{
 
     show =()=>{
         this.domElement.style.display = 'flex';
-        this.MenuElements.ActivateKeys();
+        this.MenuElements.EnableKeys();
     }
 
     get domElement(){   

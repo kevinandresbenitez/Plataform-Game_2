@@ -21,7 +21,7 @@ module.exports = class HomeConfig extends MainClass.Menu{
         this.ConfigElements.addElements(Utils.createElementDom({className:'item',element:'button',onClick:this.deleteModal}));
         this.addElements(Utils.createElementDom({className:'item title',element:'div'}));
         this.ConfigElements.addElements(Utils.createElementDom({className:'item',element:'button'}));
-        this.ConfigElements.ActivateKeys();
+        this.ConfigElements.EnableKeys();
     }
 
     deleteModal=()=>{

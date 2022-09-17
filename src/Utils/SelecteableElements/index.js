@@ -12,7 +12,7 @@ module.exports = class SelectableElements{
     constructor(props){
         this.elementSelected = props.elementSelected || 0;
         this.Keys =props.keys;
-        this.className = props.className || 'selected';
+        this.className = props.class || 'selected';
 
         
         // Verifi location from the items selectionables
@@ -80,7 +80,7 @@ module.exports = class SelectableElements{
         window.removeEventListener('keydown',this.ProcessKeysEvents);
     }
 
-    ActivateKeys=()=>{
+    EnableKeys=()=>{
         window.addEventListener('keydown',this.ProcessKeysEvents);
     }
 
@@ -98,7 +98,7 @@ module.exports = class SelectableElements{
 
             case (this.Keys.Open):
                 // activate functions for element selected  if have
-                this.#elements[this.elementSelected].click();
+                this.#elements[this.elementSelected].onclick();
             break
         }
     }

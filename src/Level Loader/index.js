@@ -1,6 +1,7 @@
 let Utils = require('../Utils/index.js');
 let Levels = require ('../Game Elements/Levels/index.js');
 let Blocks = require('../Game Elements/Blocks/index.js');
+const Player = require('../Game Elements/Items/Player.js');
 
 
 class LevelLoader{
@@ -27,6 +28,7 @@ class LevelLoader{
     create(){
         this.location.appendChild(this.domElement);
     }
+    
 
     createCanvasForLevel(level){
         // add canvas elements
@@ -232,6 +234,15 @@ class LevelLoader{
     loadDinamcElementsForLevel=(level)=>{
         // Load personajes - enemies for level
         this.#DinamicElements = Object.values(this.getDinamicElementsForLevel(level));
+
+        // Enable moviment and keys in dinamic elemnts
+        this.#DinamicElements.forEach((element)=>{
+            // If is a player enable keys
+            if(element instanceof Player){
+                element.EnableKeys();
+            }
+        })
+
     }
     loadStaticElementsForLevel=(level)=>{
         // Load blocks for level
@@ -268,8 +279,8 @@ class LevelLoader{
         })
         
             // Ejecute gravity in elements
-        this.#DinamicElements.filter((item)=>{return item.gravity ? item.gravity:false}).forEach((item)=>{
-            item.position.y += item.getGravity;
+        this.#DinamicElements.filter((item)=>{return item.gravity.isEnabled ? item.gravity.isEnabled:false}).forEach((item)=>{
+            item.position.y += item.gravity.speed;
         })  
 
 
