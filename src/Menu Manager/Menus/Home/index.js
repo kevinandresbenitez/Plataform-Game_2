@@ -7,13 +7,13 @@ const SelectableElements = require('../../../Utils/SelecteableElements');
 // Sections
 module.exports = class Home extends MainClass.Menu{
     // Dom element created for the class
-    #domElement;
     #MenuElements;
-    #ConfigElements;
 
-    constructor(props){
-        super(props);
-        this.#domElement = Utils.createElementDom({className:'home keepRadioAspect',element:'div'});
+    constructor(location){
+        // Create the dom element
+        let domElement = Utils.createElementDom({className:'home keepRadioAspect',element:'div'});
+        super(location,domElement);
+        
     }
 
 
@@ -21,7 +21,7 @@ module.exports = class Home extends MainClass.Menu{
         super.create();
 
         // Add selecteableElements
-        this.#MenuElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.#domElement});
+        this.#MenuElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.domElement});
         // Add items
         this.MenuElements.addElements(Utils.createElementDom({className:'btn-init',element:'button',onClick:this.functions.openLevelSelector}));
         this.MenuElements.addElements(Utils.createElementDom({className:'btn-config',element:'button',onClick:this.functions.openConfig}));
@@ -32,16 +32,14 @@ module.exports = class Home extends MainClass.Menu{
         openConfig:()=>{
             this.MenuElements.DisableKeys();
             // Create Modal
-            let ConfigModal = new HomeConfig({location:this.#domElement});
-            ConfigModal.onDelete = ()=>{this.MenuElements.EnableKeys()};
+            let ConfigModal = new HomeConfig(this.domElement,this.MenuElements.EnableKeys);
             ConfigModal.create();
         },
 
         openLevelSelector:()=>{
             // Create Level Selector Section
             this.hidde();
-    
-            let levelSelector = new LevelSelector({location:document.querySelector('.container'),showHome:this.show});
+            let levelSelector = new LevelSelector(document.querySelector('.container'),this.show);
             levelSelector.create();
         }
     }
@@ -56,14 +54,8 @@ module.exports = class Home extends MainClass.Menu{
         this.MenuElements.EnableKeys();
     }
 
-    get domElement(){   
-        return this.#domElement;
-    }
     get MenuElements(){   
         return this.#MenuElements;
-    }
-    get ConfigElements(){
-        return this.#ConfigElements
     }
     
 }

@@ -4,19 +4,19 @@ const SelectableElements = require('../../../Utils/SelecteableElements')
 const LevelLoader = require('../../../Level Loader/index');
 
 module.exports = class LevelSelector extends MainClass.Menu{
-    #domElement;
     #LevelSelectorElements;
-    // function to return home
-    showHome;
+    // function to return home / callback
+    #returnCallback
 
     // Level config
     #levelSelected = 1;
     #levelSelectorCarrusel;
 
-    constructor(props){
-        super(props);
-        this.#domElement = Utils.createElementDom({className:'levelSelector keepRadioAspect',element:'div'});
-        this.showHome = props.showHome;
+    constructor(location,returnCallback){
+        let domElement = Utils.createElementDom({className:'levelSelector keepRadioAspect',element:'div'});
+        super(location,domElement);
+        // set return function 
+        this.#returnCallback =returnCallback;  
     }
 
     create(){
@@ -26,7 +26,7 @@ module.exports = class LevelSelector extends MainClass.Menu{
         
         
         // Create buttons start game and return home page
-        this.#LevelSelectorElements =  new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.#domElement});
+        this.#LevelSelectorElements =  new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.domElement});
         // Create carrusel
         
         let Carrusel = Utils.createElementDom({className:'carrusel-levels',element:'div',onClick:this.functions.selectLevels});
@@ -51,7 +51,7 @@ module.exports = class LevelSelector extends MainClass.Menu{
         returnHome:()=>{
             this.LevelSelectorElements.DisableKeys();
             this.delete();
-            this.showHome();
+            this.returnCallback();
         },
 
         selectLevels:()=>{
@@ -71,16 +71,21 @@ module.exports = class LevelSelector extends MainClass.Menu{
             this.delete();
             
             // Load Level
-            let main = new LevelLoader({location:document.querySelector('.container')});
-            main.create();
-            main.loadLevel(1);
+            this.main =  new LevelLoader(document.querySelector('.container'),this.functions.returnLevelSelectorMenuCallback);
+            this.main.create();
+            this.main.loadLevel(1);
+        },
+
+        returnLevelSelectorMenuCallback:()=>{
+            this.create();
+            
         }
 
     }
 
 
-    get domElement(){   
-        return this.#domElement;
+    get returnCallback(){
+        return this.#returnCallback;
     }
 
     get LevelSelectorElements(){

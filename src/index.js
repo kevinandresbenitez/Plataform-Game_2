@@ -9,7 +9,7 @@ require('../public/less/index.less');
 class main {
 
     static init=()=>{
-        let home = new Home({location:document.querySelector('.container')});
+        let home = new Home(document.querySelector('.container'));
         home.create();
         
     }

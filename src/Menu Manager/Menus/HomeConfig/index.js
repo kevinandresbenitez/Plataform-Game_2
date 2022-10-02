@@ -3,21 +3,21 @@ const Utils = require('../../../Utils');
 const SelectableElements = require('../../../Utils/SelecteableElements');
 
 module.exports = class HomeConfig extends MainClass.Menu{
-    #domElement
     #ConfigElements
-    // function berore delete modal
-    onDelete;
+    #returnCallback;
     
-    constructor(props){
-        super(props);
-        this.#domElement = Utils.createElementDom({className:'config modal',element:'div'});
+    constructor(location,returnCallback){
+        let domElement = Utils.createElementDom({className:'config modal',element:'div'});
+        super(location,domElement);
+
+        // set return function 
+        this.#returnCallback =returnCallback;  
     }
 
     create(){
         super.create();
-
         // Create Items in the config
-        this.#ConfigElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.#domElement});
+        this.#ConfigElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.domElement});
         this.ConfigElements.addElements(Utils.createElementDom({className:'item',element:'button',onClick:this.deleteModal}));
         this.addElements(Utils.createElementDom({className:'item title',element:'div'}));
         this.ConfigElements.addElements(Utils.createElementDom({className:'item',element:'button'}));
@@ -27,19 +27,12 @@ module.exports = class HomeConfig extends MainClass.Menu{
     deleteModal=()=>{
         this.delete()
         this.ConfigElements.DisableKeys();
-
-        // if have a function on delete enabled 
-        if(this.onDelete){
-            this.onDelete();
-        }
-        
+        this.returnCallback();
     }
 
-
-    get domElement(){   
-        return this.#domElement;
+    get returnCallback(){
+        return this.#returnCallback;
     }
-
     get ConfigElements(){
         return this.#ConfigElements;
     }

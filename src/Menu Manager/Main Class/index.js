@@ -3,13 +3,19 @@ let Utils = require('../../Utils/index');
 class Menu{
     // location : location where the object will be worked , Required
     #location;
+    #domElement;
 
-    constructor(props){
-        let {location} = props || false;
+    constructor(location = false , domElement = false){
         if(!location || !Utils.existsDomElement(location)){
             throw new Error("Error in the constructor Menu,'location' not found or does not exist");
         }
-        this.#location = props.location;
+
+        if(!domElement || !Utils.isDomElement(domElement)){
+            throw new Error("Error in the constructor Menu,'domElement' not found or does not exist");
+        }
+
+        this.#location =location;
+        this.#domElement=domElement;
     }
 
 
@@ -20,6 +26,13 @@ class Menu{
         return this.#location;
     }
 
+    set domElement(value){
+        throw new Error("Error domElement cant change, is defined in the constructor ");
+    }
+
+    get domElement(){
+        return this.#domElement;
+    }
 
     create(){
         this.location.appendChild(this.domElement);
@@ -31,6 +44,10 @@ class Menu{
     }
 
     addElements=(element)=>{
+        if(!(Utils.isDomElement(element))){
+            throw new Error("need a dom element");
+        }
+
         this.domElement.appendChild(element);
     }
 

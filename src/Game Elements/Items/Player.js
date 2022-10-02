@@ -24,7 +24,7 @@ module.exports = class Player{
 
     // Animation manager
     Animation;
-
+    LevelMosaics;
     
     // Gravity Configs
     gravity={
@@ -33,7 +33,7 @@ module.exports = class Player{
     }
 
     // Spedd config
-    speedRun = 15;
+    speedRun = 20;
     
     // Moviment Manajer
     inMoviment={
@@ -59,6 +59,103 @@ module.exports = class Player{
     }
 
 
+    getLevelMosaicPosition=(LengthMosaics)=>{
+
+        let sumaAnterior = [];
+        for(let i = 1 ; i <= LengthMosaics.length;i++){
+                sumaAnterior.push(LengthMosaics.filter((object,index)=>{
+                    if(index < i){
+                        return true
+                    }
+                }).reduce((a,b)=>{return a+b}))
+        }
+        
+
+        // Get position mosaic actualy
+        let firstMosaic;
+        for(let i=0 ;i < sumaAnterior.length;i++){
+            if(i){
+                if((this.position.x < sumaAnterior[i])  && (this.position.x > sumaAnterior[i - 1])){
+                    firstMosaic = i ;
+                }
+            }else{
+                if(this.position.x < sumaAnterior[i]){
+                    firstMosaic = i ;
+                }
+            }    
+        }
+
+        // second 
+        let SecondMosiac;
+        if(firstMosaic == 0){
+            SecondMosiac = 1
+        }else if(firstMosaic == (LengthMosaics.length - 1)){
+            SecondMosiac = LengthMosaics.length - 2
+        }else{
+            SecondMosiac = firstMosaic - 1;
+        }
+
+
+        // third
+        let thirddMosiac;
+        if(firstMosaic == 0){
+            thirddMosiac = 2
+        }else if(firstMosaic == (LengthMosaics.length - 1)){
+            thirddMosiac = LengthMosaics.length - 3
+        }else{
+            thirddMosiac = firstMosaic + 1;
+        }
+
+        return [firstMosaic,SecondMosiac,thirddMosiac]
+    }
+
+    loadColisionSystem=(MosaicBlocks,LengthMosaics)=>{
+        this.LevelMosaics = MosaicBlocks;
+        this.LevelMosaicsPosition = this.getLevelMosaicPosition(LengthMosaics);
+    }
+
+
+
+    verify = {
+        
+        collisionBlockTop:()=>{
+            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){                
+                let top = (this.position[1] + this.height == this.MainThis.levelLoader.Blocks[i].topLeft[1] ) && (this.position[0] + this.width > this.MainThis.levelLoader.Blocks[i].topLeft[0] && this.position[0] < this.MainThis.levelLoader.Blocks[i].topRight[0]  );
+                if(top){
+                    return true;
+                }                
+            }
+        },
+
+        collisionBlockBottom:()=>{
+            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){
+                let bottom =(this.position[1] == this.MainThis.levelLoader.Blocks[i].buttomLeft[1] ) && (this.position[0]+this.width > this.MainThis.levelLoader.Blocks[i].buttomLeft[0] && this.position[0] < this.MainThis.levelLoader.Blocks[i].buttomRight[0]  );
+                if(bottom){
+                    return true;
+                }                
+            }
+        },
+
+        collisionBlockRight:()=>{
+            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){
+                let right =((this.position[0] + this.width == this.MainThis.levelLoader.Blocks[i].buttomLeft[0]) && (this.position[1]  < this.MainThis.levelLoader.Blocks[i].buttomLeft[1] ) && (this.position[1] > this.MainThis.levelLoader.Blocks[i].topLeft[1] || this.position[1] + this.height > this.MainThis.levelLoader.Blocks[i].topLeft[1]))
+                if(right){
+                    return true;
+                }
+            }
+        },
+
+        collisionBlockLeft:()=>{
+            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){
+                let left =((this.position[0] == this.MainThis.levelLoader.Blocks[i].buttomRight[0]) && (this.position[1]  < this.MainThis.levelLoader.Blocks[i].buttomRight[1] ) && (this.position[1] > this.MainThis.levelLoader.Blocks[i].topRight[1] || this.position[1] + this.height > this.MainThis.levelLoader.Blocks[i].topRight[1]));
+                if(left){
+                    return true;
+                }
+            }
+        }
+
+    }
+
     EnableKeys=()=>{
         document.addEventListener('keydown',this.EventKeys.KeyDown);
         document.addEventListener('keyup',this.EventKeys.KeyUp);
@@ -66,8 +163,9 @@ module.exports = class Player{
     }
 
     DisableKeys=()=>{
-        document.removeEventListener('keydown');
-        document.removeEventListener('keyup');
+        document.removeEventListener('keydown',this.EventKeys.KeyDown);
+        document.removeEventListener('keyup',this.EventKeys.KeyUp);
+        document.removeEventListener('click',this.pabeando)
         clearInterval(this.intervalMoviment);
     }
 
