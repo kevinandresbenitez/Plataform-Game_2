@@ -1,5 +1,5 @@
 const Utils = require('./Utils/index.js');
-const Home = require('./Menu Manager/Menus/Home');
+const Home = require('./Menus/Home/index.js');
 
 
 // Import css Styles

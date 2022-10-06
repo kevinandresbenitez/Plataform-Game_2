@@ -1,6 +1,6 @@
-const MainClass = require('../../Main Class');
-const Utils = require('../../../Utils');
-const SelectableElements = require('../../../Utils/SelecteableElements');
+const MainClass = require('../../Utils/class/Menus/index.js');
+const Utils = require('../../Utils');
+const SelectableElements = require('../../Utils/class/SelecteableElements');
 
 module.exports = class HomeConfig extends MainClass.Menu{
     #ConfigElements

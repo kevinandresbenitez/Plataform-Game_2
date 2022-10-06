@@ -1,7 +1,7 @@
 let Utils = require('../Utils/index.js');
-let Levels = require ('../Game Elements/Levels/index.js');
-let Blocks = require('../Game Elements/Blocks/index.js');
+let GetForLevel= require('../Utils/GetForLevel/index.js');
 const Player = require('../Game Elements/Items/Player.js');
+const levels = require('../Game Elements/Levels/index.js');
 
 
 class LevelLoader{
@@ -13,6 +13,7 @@ class LevelLoader{
 
     // info from level
     #levelNumber
+    #levelName
 
     #CanvasContainer;
     #CanvasStaticElements;
@@ -27,7 +28,7 @@ class LevelLoader{
     #gamePaused
 
     constructor(location = false , callbackFunction){
-        if(!location || !Utils.existsDomElement(location)){
+        if(!(location && Utils.existsDomElement(location))){
             throw new Error("Error in the constructor Menu,'location' not found or does not exist");
         }
         this.#location = location;
@@ -84,169 +85,40 @@ class LevelLoader{
         this.#gamePaused  = value;
     }
 
-    getForLevel = {
-        widthCanvas:(level)=>{
-            // verify level exist
-            if(!(Levels[level - 1])){
-                throw new Error('Level not exist');
-            }
-    
-            // Get blocks count for width level
-            let count=0;
-            Levels[level -1 ].level.forEach((mosaic)=>{
-                count +=mosaic[0].length;
-            })
-    
-            return count * 40;
-        },
-        // from the matriz of level return blocks
-        blocks:(level)=>{
-            // verify level exist
-            if(!(Levels[level - 1])){
-                throw new Error('Level not exist');
-            }
-    
-    
-            let allBlocks = [];
-            let Mosaic =[];
-    
-            // Foreach mosaics
-            let MosaicX = 0;
-            Levels[level-1].level.forEach((mosaic)=>{
-                let y =0;
-                
-                mosaic.forEach((fila)=>{
-                    let x = MosaicX;
-                    fila.forEach((item)=>{
-                        // Solid block
-                        if(item == 1){
-                            Mosaic.push(new Blocks.SolidBlock(x,y,40));
-                        }
-                        
-                        // No solid block
-                        if(item == 2){
-                            Mosaic.push(new Blocks.NoSolidBlock(x,y,40));
-                        }
-    
-                        x += 40;
-                    })        
-                    x=0;
-                    y += 40;
-                })
-                
-                allBlocks.push(Mosaic);
-                Mosaic =[];
-                MosaicX += mosaic[0].length * 40;
-            })
-    
-            return allBlocks;
-    
-        },
-        // from the blocks get collisionables blocks
-        collisionBlocks:(level)=>{
-            // verify level exist
-            if(!(Levels[level - 1])){
-                throw new Error('Level not exist');
-            }
-    
-    
-    
-            let allBlocks = [];
-            let Mosaic =[];
-    
-            // Foreach mosaics
-            let MosaicX = 0;
-            Levels[level-1].level.forEach((mosaic)=>{
-                let y =0;
-                
-                mosaic.forEach((fila)=>{
-                    let x = MosaicX;
-                    fila.forEach((item)=>{
-                        // Solid block
-                        if(item == 1){
-                            Mosaic.push(new Blocks.SolidBlock(x,y,40));
-                        }
-                        
-                        x += 40;
-                    })
-    
-                    x=0;
-                    y += 40;
-                })
-                
-                allBlocks.push(Mosaic);
-                Mosaic =[];
-                MosaicX += mosaic[0].length * 40;
-            })
-    
-            return allBlocks;
-        },
-        // get width of Mosaic collisionBlocks
-        collisionBlocksLenght:(level)=>{
-            // verify level exist
-            if(!(Levels[level - 1])){
-                throw new Error('Level not exist');
-            }
-        
-            let Mosaic =[];
-        
-            // Foreach mosaics
-            let x= 0;
-            Levels[level-1].level.forEach((mosaic)=>{
-                mosaic.forEach((fila)=>{
-                    x = fila.length * 40 ;
-                })
-                Mosaic.push(x);
-                x=0;
-            })
-        
-            return Mosaic;
-        },
 
-        dinamicElements:(level)=>{
-            // verify level exist
-            if(!(Levels[level - 1])){
-                throw new Error('Level not exist');
-            }
-            
-            return (Levels[level - 1].elements);
-        },
-        staticElements:(level)=>{
-            return this.getForLevel.blocks(level);
-        }
-    }
-
-    loadForLevel = {
+    loadElements = {
         // Load elements for the lever and push in a globar var
-        dinamcElements:(level)=>{
+        dinamic:(level)=>{
             // Load personajes - enemies for level
-            this.#DinamicElements = this.getForLevel.dinamicElements(level);
+            this.#DinamicElements = GetForLevel.dinamicElements(level);
         },
 
-        staticElements:(level)=>{
+        static:(level)=>{
             // Load blocks for level
-            this.#StaticElements = this.getForLevel.staticElements(level);
+            this.#StaticElements = GetForLevel.staticElements(level);
+        },
+
+        all:function(level){
+            this.dinamic(level);
+            this.static(level);
         }
 
 
     }
 
+    loadLevelInfo=(level)=>{
+        this.#levelNumber = level;
+        this.#levelName = levels[level - 1].name;
+    }
     
 
     loadLevel(level){
         // Set vars for level
-        this.#levelNumber = level;
-
-
-        // Load Elements for the level
-        this.loadForLevel.dinamcElements(level);
-        this.loadForLevel.staticElements(level);
-
+        this.loadLevelInfo(level);
+        // Load Elements for the level 
+        this.loadElements.all(level);
         // create canvas for the game
         this.canvas.createForLevel(level);
-        
-
-    
         // Enable keys for config ,pase game ...
         this.KeysFromConfigGame.enable();
 
@@ -264,8 +136,8 @@ class LevelLoader{
         this.colissionSystemInDinamicElements.enable();
 
         
-        this.canvas.render.dinamicElements();
-        this.canvas.render.staticElements();        
+        this.canvas.renderElements.dinamic();
+        this.canvas.renderElements.static();        
     }
 
     stopGame =()=>{
@@ -312,7 +184,6 @@ class LevelLoader{
 
 
     }
-
     // Keys from the user or other elements dinamics
     keysInDinamicElements ={
 
@@ -346,7 +217,7 @@ class LevelLoader{
             this.#DinamicElements.forEach((element)=>{
                 // If is a player enable keys
                 if(element instanceof Player){
-                    element.loadColisionSystem(this.getForLevel.collisionBlocks(this.levelNumber),this.getForLevel.collisionBlocksLenght(this.levelNumber) );        
+                    element.loadColisionSystem(GetForLevel.collisionBlocks(this.levelNumber),GetForLevel.collisionBlocksLenght(this.levelNumber,'distance') );
                 }
             })
         }
@@ -361,12 +232,12 @@ class LevelLoader{
             
             
             // add dimentions for the container
-            this.#CanvasContainer.style.width =this.getForLevel.widthCanvas(level) + "px";
+            this.#CanvasContainer.style.width =GetForLevel.widthCanvas(level) + "px";
             // add dimentions for the canvas
-            this.#CanvasStaticElements.width =this.getForLevel.widthCanvas(level);
+            this.#CanvasStaticElements.width =GetForLevel.widthCanvas(level);
             this.#CanvasStaticElements.height =900;
             
-            this.#CanvasDinamicElements.width =this.getForLevel.widthCanvas(level);
+            this.#CanvasDinamicElements.width =GetForLevel.widthCanvas(level);
             this.#CanvasDinamicElements.height =900;
     
             //Add elements in the dom
@@ -427,9 +298,9 @@ class LevelLoader{
             }
         },
 
-        render:{
+        renderElements:{
 
-            dinamicElements:async()=>{
+            dinamic:async()=>{
 
                     // Get Dinamic images for render
                 let ImagesItems = await Promise.all(    
@@ -456,12 +327,12 @@ class LevelLoader{
         
                 // Images are loaded and are draw, render new frame
                 if(ImagesItems && this.renderIsEnabled){
-                    window.requestAnimationFrame(this.canvas.render.dinamicElements);
+                    window.requestAnimationFrame(this.canvas.renderElements.dinamic);
                 }
         
             },
     
-            staticElements:()=>{
+            static:()=>{
                 // Render static elements
                 this.canvas.draw.blocks(this.#StaticElements)
             }
@@ -469,7 +340,7 @@ class LevelLoader{
         },
 
         stopRender:()=>{
-            window.cancelAnimationFrame(this.canvas.render.dinamicElements);
+            window.cancelAnimationFrame(this.canvas.renderElements.dinamic);
         }
     }
 

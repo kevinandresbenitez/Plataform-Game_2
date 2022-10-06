@@ -1,4 +1,4 @@
-let Utils = require('../../Utils/index');
+let Utils = require('../../index');
 
 class Menu{
     // location : location where the object will be worked , Required

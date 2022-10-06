@@ -1,7 +1,7 @@
-const MainClass = require('../../Main Class');
-const Utils = require('../../../Utils');
-const SelectableElements = require('../../../Utils/SelecteableElements')
-const LevelLoader = require('../../../Level Loader/index');
+const MainClass = require('../../Utils/class/Menus/index.js');
+const Utils = require('../../Utils');
+const SelectableElements = require('../../Utils/class/SelecteableElements')
+const LevelLoader = require('../../Level Loader/index');
 
 module.exports = class LevelSelector extends MainClass.Menu{
     #LevelSelectorElements;
