@@ -3,7 +3,11 @@ let Player = require('../Items/Player.js');
 let levels =[
     {
         name:'Level 1',
-        elements:[new Player({position:{x:200,y:200}})],
+        userPositions:{
+            startPosition:{position:{x:200,y:200}},
+            endPosition :{position:{x:200,y:200}}
+        },
+        elements:[],
         level:[
             [   
                 [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],
@@ -111,7 +115,12 @@ let levels =[
 
     },{
         name:'Level 2',
-        elements:[new Player({position:{x:200,y:200}})],
+        userPositions:{
+            startPosition:{position:{x:200,y:200}},
+            endPosition :{position:{x:200,y:200}}
+        },
+
+        elements:[],
         level:[
             [   
                 [1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0],

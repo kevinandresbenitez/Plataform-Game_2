@@ -2,12 +2,16 @@ let Utils = require('../Utils/index.js');
 let GetForLevel= require('../Utils/GetForLevel/index.js');
 const Player = require('../Game Elements/Items/Player.js');
 const levels = require('../Game Elements/Levels/index.js');
+const CanvasGame = require('../Utils/class/CanvasGame/index.js');
+
+
 
 
 class LevelLoader{
     // location : location where the object will be worked , Required
     #location;
     #domElement;
+    #Canvas
     // Callback what return at level selector
     #exitToLevelSelector 
 
@@ -15,16 +19,11 @@ class LevelLoader{
     #levelNumber
     #levelName
 
-    #CanvasContainer;
-    #CanvasStaticElements;
-    #CanvasDinamicElements;
-
     // User-enemiest-blocks are loaded here
     #DinamicElements = [];
     #StaticElements = [];
 
     // Boleans
-    #renderIsEnabled
     #gamePaused
 
     constructor(location = false , callbackFunction){
@@ -38,10 +37,14 @@ class LevelLoader{
     
     create(){
         this.location.appendChild(this.domElement);
+        // Create canvas manajer
+        this.#Canvas = new CanvasGame(this.domElement);
     }
     
     delete(){
         this.location.removeChild(this.domElement);
+        this.#Canvas.delete();
+        
     }
 
     get exitToLevelSelector(){
@@ -54,13 +57,7 @@ class LevelLoader{
     set levelNumber(value){
         throw Error(('No cant set Level number , is loaded in loadlevel function') );
     }
-    get CanvasStaticElements(){
-        return this.#CanvasStaticElements;
-    }
 
-    get CanvasDinamicElements(){
-        return this.#CanvasDinamicElements;
-    }
 
     get location (){
         return this.#location;
@@ -70,12 +67,7 @@ class LevelLoader{
         return this.#domElement;
     }
 
-    set renderIsEnabled(value){
-        this.#renderIsEnabled = value;
-    }
-    get renderIsEnabled(){
-        return this.#renderIsEnabled;
-    }
+
 
     get gamePaused(){
         return this.#gamePaused;
@@ -113,40 +105,51 @@ class LevelLoader{
     
 
     loadLevel(level){
-        // Set vars for level
-        this.loadLevelInfo(level);
-        // Load Elements for the level 
-        this.loadElements.all(level);
-        // create canvas for the game
-        this.canvas.createForLevel(level);
-        // Enable keys for config ,pase game ...
-        this.KeysFromConfigGame.enable();
+        // verify level exist
+        if(!(levels[level - 1])){
+            throw new Error('Level not exist');
+        }
 
-        // Start Game
+        // Stop Game Previus
+        this.stopGame();
+
+        // Delete canvas if exist and create new
+        this.#Canvas.deleteCanvas();
+        this.#Canvas.createCanvasForLevel(level);
+        
+        // Load level info
+        this.loadLevelInfo(level);
+        this.loadElements.all(level);
+
+        
+        // Start game 
         this.startGame();
     }
 
+    
 
     startGame=()=>{
         // Set boleans game start
         this.gamePaused = false;
-        this.renderIsEnabled =true;
+        
 
         this.keysInDinamicElements.enable();
+        this.KeysFromConfigGame.enable();
         this.colissionSystemInDinamicElements.enable();
 
-        
-        this.canvas.renderElements.dinamic();
-        this.canvas.renderElements.static();        
+        // Load elements in canvas
+        this.#Canvas.renderIsEnabled =true;
+        this.#Canvas.renderElements.static(this.#StaticElements);
+        this.#Canvas.renderElements.dinamic(this.#DinamicElements);
     }
 
     stopGame =()=>{
         // verify of the game is run 
         this.gamePaused = true;
-        this.renderIsEnabled = false;
+        this.#Canvas.renderIsEnabled =false;
         
         this.keysInDinamicElements.disable();
-        this.canvas.stopRender();
+        this.#Canvas.stopRender();
      
     }
 
@@ -167,6 +170,11 @@ class LevelLoader{
                 this.delete();
                 this.KeysFromConfigGame.disable();
                 this.exitToLevelSelector();
+            }
+
+            // Load next level Test
+            if(e.key == 'k'){
+                this.loadLevel(1);
             }
 
             
@@ -223,126 +231,8 @@ class LevelLoader{
         }
     }
     
-    canvas = {
-        createForLevel:(level)=>{
-            // add canvas elements
-            this.#CanvasContainer =Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
-            this.#CanvasStaticElements =Utils.createElementDom({className:'canvas-StaticElements',element:'canvas'});
-            this.#CanvasDinamicElements =Utils.createElementDom({className:'canvas-DinamicElements',element:'canvas'});
-            
-            
-            // add dimentions for the container
-            this.#CanvasContainer.style.width =GetForLevel.widthCanvas(level) + "px";
-            // add dimentions for the canvas
-            this.#CanvasStaticElements.width =GetForLevel.widthCanvas(level);
-            this.#CanvasStaticElements.height =900;
-            
-            this.#CanvasDinamicElements.width =GetForLevel.widthCanvas(level);
-            this.#CanvasDinamicElements.height =900;
-    
-            //Add elements in the dom
-            this.#CanvasContainer.appendChild(this.#CanvasStaticElements);
-            this.#CanvasContainer.appendChild(this.#CanvasDinamicElements);
-            this.#domElement.appendChild(this.#CanvasContainer);
-            //Resize window
-            Utils.resizeWindow();
-        },
 
-        delete:()=>{
-            this.#CanvasContainer.removeChild(this.#CanvasDinamicElements);
-            this.#CanvasContainer.removeChild(this.#CanvasStaticElements);
-        },
 
-        clear:{
-            dinamicElements:()=>{
-                // get dimentions from the canvas and clear canvas
-                let ContextCanvas = this.CanvasDinamicElements.getContext('2d');
-                ContextCanvas.clearRect(0, 0,1600,900);
-            },
-            staticElements:()=>{
-                // get dimentions from the canvas and clear canvas
-                let ContextCanvas = this.CanvasStaticElements.getContext('2d');
-                ContextCanvas.clearRect(0, 0,1600,900);
-            }
-        },
-
-        draw:{
-            blocks:(Blocks)=>{
-                // draw Allblocks
-                let canvasContext = this.CanvasStaticElements.getContext('2d');
-                // Clear canvas Static
-                this.canvas.clear.staticElements();
-
-                // draw Blocks in canvas
-                Blocks.forEach((mosaic)=>{
-                    mosaic.forEach((block)=>{
-                        let img = new Image();
-                        img.src = block.img;
-                        img.addEventListener('load',()=>{
-                            canvasContext.drawImage(img,block.x,block.y,40,40)
-                        })
-                    })
-                })
-
-            },
-
-            images:(Images)=>{
-                let ContextCanvas = this.CanvasDinamicElements.getContext('2d');
-                // Clear canvas dinamic
-                this.canvas.clear.dinamicElements();
-
-                // Draw Images
-                Images.forEach((item)=>{
-                    ContextCanvas.drawImage(item.imagen,item.position.x,item.position.y,item.width,item.height);
-                })
-            }
-        },
-
-        renderElements:{
-
-            dinamic:async()=>{
-
-                    // Get Dinamic images for render
-                let ImagesItems = await Promise.all(    
-                    this.#DinamicElements.map(async(Item)=>{
-                        return {
-                            imagen :await Item.Animation.getImgFrame(),
-                            width:60,
-                            height:80,
-                            position :{
-                                x:Item.position.x,
-                                y:Item.position.y,
-                            }
-                        };
-                    })
-                );
-        
-                // draw Images
-                this.canvas.draw.images(ImagesItems);
-                
-                    // Ejecute gravity in elements
-                this.#DinamicElements.filter((item)=>{return item.gravity.isEnabled ? item.gravity.isEnabled:false}).forEach((item)=>{
-                    item.position.y += item.gravity.speed;
-                })  
-        
-                // Images are loaded and are draw, render new frame
-                if(ImagesItems && this.renderIsEnabled){
-                    window.requestAnimationFrame(this.canvas.renderElements.dinamic);
-                }
-        
-            },
-    
-            static:()=>{
-                // Render static elements
-                this.canvas.draw.blocks(this.#StaticElements)
-            }
-    
-        },
-
-        stopRender:()=>{
-            window.cancelAnimationFrame(this.canvas.renderElements.dinamic);
-        }
-    }
 
 }
 

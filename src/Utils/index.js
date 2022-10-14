@@ -1,6 +1,22 @@
 module.exports = class Utils{
     static createElementDom = (props)=>{
-      let {className,id,style,element} = props;
+      // Verifycation if props exist
+      if(!(props)){
+        return false;
+      }
+
+      // Verification typedate
+      if(!(typeof props == 'object')){
+        return false;
+      }
+
+      // If element type is not defined
+      if(!(props.element)){
+        return false
+      }
+
+
+      let {className,id,style,element,onClick} = props;
       let newElement =document.createElement(element);
   
       // Set Classname split string
@@ -15,7 +31,7 @@ module.exports = class Utils{
       }
 
       // Add function  if exist
-      if(props.onClick){
+      if(onClick){
         newElement.onclick = ()=>{props.onClick()};
       }
       

@@ -1,5 +1,6 @@
 let Levels = require('../../Game Elements/Levels/index.js');
 let Blocks = require('../../Game Elements/Blocks/index.js');
+const Player = require('../../Game Elements/Items/Player.js');
 
 module.exports ={
     widthCanvas:function(level){
@@ -136,14 +137,29 @@ module.exports ={
         return Mosaic;
     },
 
-    dinamicElements:function (level){
+    dinamicElements:function (level,UserDirection = 'startPosition'){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
         }
-        
-        return (Levels[level - 1].elements);
-    },
+        // verify level exist have elements
+        if(!(Levels[level - 1].elements)){
+            throw new Error('Level not have elements');
+        }
+
+        let ObjectKeys = Object.keys(Levels[level - 1]);
+        let ObjectValues = Object.values(Levels[level - 1]);
+
+        let ElementsInGame = ObjectValues[ObjectKeys.indexOf('elements')];
+        let PositionFromTheUser =ObjectValues[ObjectKeys.indexOf('userPositions')][UserDirection];
+        let User = new Player(JSON.parse(JSON.stringify(PositionFromTheUser)));
+
+
+
+        return [User,...ElementsInGame];
+    },    
+
+
     staticElements:function (level){
         return this.blocks(level);
     }
