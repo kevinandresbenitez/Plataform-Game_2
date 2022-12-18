@@ -4,7 +4,7 @@ let levels =[
     {
         name:'Level 1',
         userPositions:{
-            startPosition:{position:{x:200,y:200}},
+            startPosition:{position:{x:240,y:160}},
             endPosition :{position:{x:200,y:200}}
         },
         elements:[],

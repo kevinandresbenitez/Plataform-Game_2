@@ -20,6 +20,8 @@ let UserRunRight0= require('../../../public/Images/Player/runRight/0.png');
 let UserRunRight1= require('../../../public/Images/Player/runRight/1.png');
 
 
+
+
 module.exports = class Player extends DinamicElementClass{
     constructor(props){
         super(props.position);
@@ -28,12 +30,21 @@ module.exports = class Player extends DinamicElementClass{
         this.changeAnimation.runRight();
     }
     
+    width = 60
+    height = 80
+
     // Moviment Manajer
     inMoviment={
         right:false,
         left:false,
+        down:false
     }
     
+    // Gravity Configs
+    gravityConfig={
+        isEnabled : true,
+        speed:20,
+    }
     
     EnableKeys=()=>{
         document.addEventListener('keydown',this.EventKeys.KeyDown);
@@ -50,16 +61,46 @@ module.exports = class Player extends DinamicElementClass{
     
     
     ProcessMoviment=()=>{
-        if(this.inMoviment.right){
-            this.move.right();
+        let [firstMosaic,secondMosaic,thirdMosaic]  = this.getCollisionableBlocksForPosition(this.LevelMosaicsDistance,this.position);
+
+        // verify if user is in moviment and not collision with blocks
+        if(this.inMoviment.right && !(
+            this.verify.collisionBlockLeft(this.LevelMosaics[firstMosaic]) ||
+            this.verify.collisionBlockLeft(this.LevelMosaics[secondMosaic]) ||
+            this.verify.collisionBlockLeft(this.LevelMosaics[thirdMosaic])
+            )
+        ){
+            this.move.right();     
         }
 
-        if(this.inMoviment.left){
-            this.move.left();
+        // verify if user is in moviment and not collision with blocks
+        if(this.inMoviment.left && !(
+            this.verify.collisionBlockRight(this.LevelMosaics[firstMosaic]) ||
+            this.verify.collisionBlockRight(this.LevelMosaics[secondMosaic]) ||
+            this.verify.collisionBlockRight(this.LevelMosaics[thirdMosaic])
+            )
+        ){
+            this.move.left();  
         }
-        
-        if(this.inMoviment.jump){
-            this.move.jump();
+
+        // verify if user is in moviment and not collision with blocks
+        if(this.inMoviment.down && !(
+            this.verify.collisionBlockTop(this.LevelMosaics[firstMosaic]) ||
+            this.verify.collisionBlockTop(this.LevelMosaics[secondMosaic]) ||
+            this.verify.collisionBlockTop(this.LevelMosaics[thirdMosaic])
+            )
+        ){
+            this.move.down();                
+        }
+
+        // verify if user is in moviment and not collision with blocks
+        if(this.inMoviment.jump && !(
+            this.verify.collisionBlockBottom(this.LevelMosaics[firstMosaic]) ||
+            this.verify.collisionBlockBottom(this.LevelMosaics[secondMosaic]) ||
+            this.verify.collisionBlockBottom(this.LevelMosaics[thirdMosaic])
+            )
+        ){
+            this.move.jump();             
         }
     }
     
@@ -95,6 +136,12 @@ module.exports = class Player extends DinamicElementClass{
                 }
             };
 
+            const moveDown=()=>{
+                if(!this.inMoviment.down){
+                    this.inMoviment.down=true;
+                }
+            }
+
             const jump=()=>{
                 if(!this.inMoviment.jump){
                     this.inMoviment.jump=true;
@@ -104,7 +151,8 @@ module.exports = class Player extends DinamicElementClass{
             const handlers={
                 ArrowRight:moveRight,
                 ArrowLeft:moveLeft,
-                ArrowUp:jump
+                ArrowUp:jump,
+                ArrowDown:moveDown
             }
             
             if(handlers.hasOwnProperty(e.key)){
@@ -124,6 +172,10 @@ module.exports = class Player extends DinamicElementClass{
                 this.changeAnimation.waitLeft();
             };
 
+            const stopMoveDown=()=>{
+                this.inMoviment.down=false;
+            }
+
             const stopJump=()=>{
                 this.inMoviment.jump=false;
             }
@@ -131,6 +183,7 @@ module.exports = class Player extends DinamicElementClass{
             const handlers={
                 ArrowRight:stopMoveRight,
                 ArrowLeft:stopMoveLeft,
+                ArrowDown:stopMoveDown,
                 ArrowUp:stopJump
             }
             
@@ -143,6 +196,20 @@ module.exports = class Player extends DinamicElementClass{
         }
     }
 
+    //Get current frame from the user
+    async getFrame(){
+        return {
+            imagen:await this.Animation.getImgFrame(),
+            width:this.width,
+            height:this.height,
+            position :{
+                x:this.position.x,
+                y:this.position.y,
+            }
+        }
+    }
     
-    
+
+
+
 }

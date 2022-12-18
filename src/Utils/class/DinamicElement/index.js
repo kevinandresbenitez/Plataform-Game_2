@@ -1,4 +1,5 @@
 const AnimationFrame = require('../../../Utils/class/AnimationFrame/index.js');
+const Gravity = require('../../../Level Loader/Gravity.js');
 
 module.exports = class DinamicElement{
 
@@ -8,6 +9,7 @@ module.exports = class DinamicElement{
         }
 
         this.position = position ;
+        Gravity.addElement(this)
     }
 
 
@@ -18,11 +20,7 @@ module.exports = class DinamicElement{
     LevelMosaics;
     LevelMosaicsPosition;
     
-    // Gravity Configs
-    gravity={
-        isEnabled : true,
-        speed:0
-    }
+
     
     // Position from the user
     position={
@@ -40,7 +38,7 @@ module.exports = class DinamicElement{
         let firstMosaic;
         for(let i=0 ;i < MosaicDistance.length;i++){
             if(i){
-                if((position.x < MosaicDistance[i])  && (position.x > MosaicDistance[i - 1])){
+                if((position.x < MosaicDistance[i])  && (position.x >= MosaicDistance[i - 1])){
                     firstMosaic = i ;
                 }
             }else{
@@ -48,7 +46,10 @@ module.exports = class DinamicElement{
                     firstMosaic = i ;
                 }
             }    
+            
         }
+        
+        
 
         // second 
         let SecondMosiac;
@@ -76,7 +77,7 @@ module.exports = class DinamicElement{
 
     loadColisionSystem=(MosaicBlocks,MosaicDistance)=>{
         this.LevelMosaics = MosaicBlocks;
-        this.LevelMosaicsPosition = this.getCollisionableBlocksForPosition(MosaicDistance,this.position);
+        this.LevelMosaicsDistance = MosaicDistance;
     }
 
     setAnimation=(arrayImages,interval,positionX,positionY)=>{
@@ -93,52 +94,41 @@ module.exports = class DinamicElement{
             this.position.x+= this.speedRun;
         },
 
-        bottom:()=>{
+        down:()=>{
             this.position.y += this.speedRun;
         },
         
         jump:()=>{
-            this.position.y -= 15;
-            console.log('saltando')
+            this.position.y -= this.speedRun;
         }  
     }
 
     verify = {
         
-        collisionBlockTop:()=>{
-            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){                
-                let top = (this.position[1] + this.height == this.MainThis.levelLoader.Blocks[i].topLeft[1] ) && (this.position[0] + this.width > this.MainThis.levelLoader.Blocks[i].topLeft[0] && this.position[0] < this.MainThis.levelLoader.Blocks[i].topRight[0]  );
-                if(top){
-                    return true;
-                }                
-            }
+        collisionBlockTop:(blocks)=>{
+            return blocks.some((block)=>{
+                return (this.position.y + this.height == block.y) && (this.position.x + this.width > block.x) && (this.position.x < block.x + block.lenght)
+            })
         },
 
-        collisionBlockBottom:()=>{
-            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){
-                let bottom =(this.position[1] == this.MainThis.levelLoader.Blocks[i].buttomLeft[1] ) && (this.position[0]+this.width > this.MainThis.levelLoader.Blocks[i].buttomLeft[0] && this.position[0] < this.MainThis.levelLoader.Blocks[i].buttomRight[0]  );
-                if(bottom){
-                    return true;
-                }                
-            }
+        collisionBlockBottom:(blocks)=>{
+            return blocks.some((block)=>{
+                return (this.position.y == block.y + block.lenght) && (this.position.x + this.width > block.x) && (this.position.x < block.x + block.lenght)
+                
+            })
         },
 
-        collisionBlockRight:()=>{
-            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){
-                let right =((this.position[0] + this.width == this.MainThis.levelLoader.Blocks[i].buttomLeft[0]) && (this.position[1]  < this.MainThis.levelLoader.Blocks[i].buttomLeft[1] ) && (this.position[1] > this.MainThis.levelLoader.Blocks[i].topLeft[1] || this.position[1] + this.height > this.MainThis.levelLoader.Blocks[i].topLeft[1]))
-                if(right){
-                    return true;
-                }
-            }
+        collisionBlockRight:(blocks)=>{
+            return blocks.some((block)=>{
+                return (this.position.x == block.x + block.lenght) && (this.position.y < block.y + block.lenght) && ((this.position.y > block.y)||(this.position.y + this.height > block.y))
+            })
         },
 
-        collisionBlockLeft:()=>{
-            for(let i =0 ;this.MainThis.levelLoader.Blocks.length > i;i++){
-                let left =((this.position[0] == this.MainThis.levelLoader.Blocks[i].buttomRight[0]) && (this.position[1]  < this.MainThis.levelLoader.Blocks[i].buttomRight[1] ) && (this.position[1] > this.MainThis.levelLoader.Blocks[i].topRight[1] || this.position[1] + this.height > this.MainThis.levelLoader.Blocks[i].topRight[1]));
-                if(left){
-                    return true;
-                }
-            }
+        collisionBlockLeft:(blocks)=>{
+            return blocks.some((block)=>{
+                return (this.position.x + this.width == block.x) && (this.position.y < block.y + block.lenght) && (this.position.y > block.y || this.position.y + this.height > block.y)
+            })
+
         }
 
     }

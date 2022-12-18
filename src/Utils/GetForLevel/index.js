@@ -2,8 +2,8 @@ let Levels = require('../../Game Elements/Levels/index.js');
 let Blocks = require('../../Game Elements/Blocks/index.js');
 const Player = require('../../Game Elements/Items/Player.js');
 
-module.exports ={
-    widthCanvas:function(level){
+class getForLevel{
+    static widthCanvas(level){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -16,9 +16,9 @@ module.exports ={
         })
 
         return count * 40;
-    },
+    }
     // from the matriz of level return blocks
-    blocks:function(level){
+    static blocks(level){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -59,9 +59,9 @@ module.exports ={
 
         return allBlocks;
 
-    },
+    }
     // from the blocks get collisionables blocks
-    collisionBlocks:function(level){
+    static collisionBlocks(level){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -98,9 +98,9 @@ module.exports ={
         })
 
         return allBlocks;
-    },
+    }
     // get width of Mosaic collisionBlocks
-    collisionBlocksLenght:function(level,type = false){
+    static collisionBlocksLenght(level,type = false){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -135,9 +135,9 @@ module.exports ={
         
     
         return Mosaic;
-    },
+    }
 
-    dinamicElements:function (level,UserDirection = 'startPosition'){
+    static dinamicElements (level,UserDirection = 'startPosition'){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -157,10 +157,12 @@ module.exports ={
 
 
         return [User,...ElementsInGame];
-    },    
+    }    
 
 
-    staticElements:function (level){
+    static staticElements(level){
         return this.blocks(level);
     }
 }
+
+module.exports = getForLevel

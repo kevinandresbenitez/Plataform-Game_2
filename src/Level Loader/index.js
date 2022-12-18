@@ -3,6 +3,7 @@ let GetForLevel= require('../Utils/GetForLevel/index.js');
 const Player = require('../Game Elements/Items/Player.js');
 const levels = require('../Game Elements/Levels/index.js');
 const CanvasGame = require('../Utils/class/CanvasGame/index.js');
+const Gravity = require('./Gravity.js');
 
 
 
@@ -33,6 +34,7 @@ class LevelLoader{
         this.#location = location;
         this.#domElement = Utils.createElementDom({className:'game-container keepRadioAspect',element:'div'});
         this.#exitToLevelSelector  = callbackFunction;
+        this.Gravity = new Gravity()
     }
     
     create(){
@@ -129,28 +131,25 @@ class LevelLoader{
     
 
     startGame=()=>{
-        // Set boleans game start
+        // for pause bottom
         this.gamePaused = false;
         
 
         this.keysInDinamicElements.enable();
         this.KeysFromConfigGame.enable();
         this.colissionSystemInDinamicElements.enable();
-
-        // Load elements in canvas
-        this.#Canvas.renderIsEnabled =true;
-        this.#Canvas.renderElements.static(this.#StaticElements);
-        this.#Canvas.renderElements.dinamic(this.#DinamicElements);
+        this.gravitySystemInDinamicElements.enable();
+        this.RenderSystemInElements.enable();
+        
     }
 
     stopGame =()=>{
-        // verify of the game is run 
+        // for pause bottom
         this.gamePaused = true;
-        this.#Canvas.renderIsEnabled =false;
         
         this.keysInDinamicElements.disable();
-        this.#Canvas.stopRender();
-     
+        this.gravitySystemInDinamicElements.disable();
+        this.RenderSystemInElements.disable();
     }
 
     // keys from pause game, return level loader
@@ -231,6 +230,46 @@ class LevelLoader{
         }
     }
     
+    gravitySystemInDinamicElements={
+        disable:()=>{
+            this.Gravity.disable();
+        },
+
+        enable:()=>{
+            this.Gravity.enable();
+        }
+    }
+    
+    RenderSystemInElements={
+        disable:()=>{
+            this.#Canvas.renderIsEnabled =false;
+            this.#Canvas.stopRender();
+        },
+
+        enable:()=>{
+            // Load elements in canvas
+            this.#Canvas.renderIsEnabled =true;
+            this.#Canvas.renderElements.static(this.getStaticElementsFromBlocks(this.#StaticElements));
+            this.#Canvas.renderElements.dinamic(this.#DinamicElements);
+        }
+
+
+    }
+
+    
+
+
+    getStaticElementsFromBlocks(blocs){
+        let staticElements =[];
+
+        blocs.forEach((mosaic)=>{
+            return mosaic.forEach((item)=>{
+                staticElements.push(item);
+            })
+        });
+
+        return staticElements;
+    }
 
 
 

@@ -1,6 +1,7 @@
 const Level = require('../../../Game Elements/Levels/index.js');
 const Utils = require('../../index.js');
 let GetForLevel= require('../../GetForLevel/index.js');
+const { staticElements } = require('../../GetForLevel/index.js');
 
 module.exports = class CanvasGame { 
     #location
@@ -99,69 +100,59 @@ module.exports = class CanvasGame {
         }
     }
 
-    draw={
-        blocks:(Blocks)=>{
-            // draw Allblocks
-            let canvasContext = this.CanvasStaticElements.getContext('2d');
+    drawFrames={
+
+        static:(Frames)=>{
+            let ContextCanvas = this.CanvasStaticElements.getContext('2d');
             // Clear canvas Static
             this.clear.staticElements();
-
-            // draw Blocks in canvas
-            Blocks.forEach((mosaic)=>{
-                mosaic.forEach((block)=>{
-                    let img = new Image();
-                    img.src = block.img;
-                    img.addEventListener('load',()=>{
-                        canvasContext.drawImage(img,block.x,block.y,40,40)
-                    })
+            Frames.forEach((item)=>{
+                item.imagen.addEventListener('load',()=>{
+                    ContextCanvas.drawImage(item.imagen,item.position.x,item.position.y,item.width,item.height);
                 })
+                
             })
-
         },
 
-        images:(Images)=>{
+        dinamic:(Frames)=>{
             let ContextCanvas = this.CanvasDinamicElements.getContext('2d');
             // Clear canvas dinamic
             this.clear.dinamicElements();
 
             // Draw Images
-            Images.forEach((item)=>{
+            Frames.forEach((item)=>{
                 ContextCanvas.drawImage(item.imagen,item.position.x,item.position.y,item.width,item.height);
             })
         }
     }
 
+    async getFramesForDinamicElements(DinamicElements){
+        return await Promise.all(
+            DinamicElements.map((item)=>{return item.getFrame()})
+        );   
+    }
+
+
+    async getFramesForStaticElements(StaticElements){
+        return await Promise.all(
+            StaticElements.map((item)=>{return item.getFrame()})
+        );
+    }
 
 
     renderElements={
 
         dinamic:async(DinamicElements)=>{
 
-                // Get Dinamic images for render
-            let ImagesItems = await Promise.all(    
-                DinamicElements.map(async(Item)=>{
-                    return {
-                        imagen :await Item.Animation.getImgFrame(),
-                        width:60,
-                        height:80,
-                        position :{
-                            x:Item.position.x,
-                            y:Item.position.y,
-                        }
-                    };
-                })
-            );
-    
-            // draw Images
-            this.draw.images(ImagesItems);
+                // Get frames for all dinamic elements
+            let FramesDinamicItems = await this.getFramesForDinamicElements(DinamicElements);
+
+            // draw Images on load 
+            this.drawFrames.dinamic(FramesDinamicItems);
             
-                // Ejecute gravity in elements
-            DinamicElements.filter((item)=>{return item.gravity.isEnabled ? item.gravity.isEnabled:false}).forEach((item)=>{
-                item.position.y += item.gravity.speed;
-            })  
     
             // Images are loaded and are draw, render new frame
-            if(ImagesItems && this.renderIsEnabled){
+            if(FramesDinamicItems && this.renderIsEnabled){
                 window.requestAnimationFrame(()=>{
                     this.renderElements.dinamic(DinamicElements);
                 });
@@ -169,9 +160,11 @@ module.exports = class CanvasGame {
     
         },
 
-        static:(staticElements)=>{
+        static:async (staticElements)=>{
+            let framesForStaticElements =await this.getFramesForStaticElements(staticElements);
+
             // Render static elements
-            this.draw.blocks(staticElements)
+            this.drawFrames.static(framesForStaticElements)
         }
 
     }
