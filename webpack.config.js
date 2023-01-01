@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin =require('html-webpack-plugin');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 module.exports = {
     entry: __dirname + '/src/index.js',
@@ -60,6 +61,9 @@ module.exports = {
         port: 9000,
     },
 
-    plugins: [new HtmlWebpackPlugin({template:__dirname + '/src/index.html'})],
+    plugins: [
+      new HtmlWebpackPlugin({template:__dirname + '/src/index.html'}),
+      new NodePolyfillPlugin()
+    ],
 
 };
