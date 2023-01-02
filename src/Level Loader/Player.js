@@ -1,28 +1,29 @@
 // Import render utils
-const DinamicElementClass = require('../../Utils/class/DinamicElement/index.js');
+import { DinamicElement } from '../Utils/class/DinamicElement';
+import { SystemCollision } from './CollisionSystem';
 
 
 // Import images from the user
-let UserWaitRight0= require('../../../public/Images/Player/waitRight/0.png');
-let UserWaitRight1= require('../../../public/Images/Player/waitRight/1.png');
-let UserWaitRight2= require('../../../public/Images/Player/waitRight/2.png');
-let UserWaitRight3= require('../../../public/Images/Player/waitRight/3.png');
+let UserWaitRight0= require('../../public/Images/Player/waitRight/0.png');
+let UserWaitRight1= require('../../public/Images/Player/waitRight/1.png');
+let UserWaitRight2= require('../../public/Images/Player/waitRight/2.png');
+let UserWaitRight3= require('../../public/Images/Player/waitRight/3.png');
 
-let UserWaitLeft0= require('../../../public/Images/Player/waitLeft/0.png');
-let UserWaitLeft1= require('../../../public/Images/Player/waitLeft/1.png');
-let UserWaitLeft2= require('../../../public/Images/Player/waitLeft/2.png');
-let UserWaitLeft3= require('../../../public/Images/Player/waitLeft/3.png');
+let UserWaitLeft0= require('../../public/Images/Player/waitLeft/0.png');
+let UserWaitLeft1= require('../../public/Images/Player/waitLeft/1.png');
+let UserWaitLeft2= require('../../public/Images/Player/waitLeft/2.png');
+let UserWaitLeft3= require('../../public/Images/Player/waitLeft/3.png');
 
-let UserRunLeft0= require('../../../public/Images/Player/runLeft/0.png');
-let UserRunLeft1= require('../../../public/Images/Player/runLeft/1.png');
+let UserRunLeft0= require('../../public/Images/Player/runLeft/0.png');
+let UserRunLeft1= require('../../public/Images/Player/runLeft/1.png');
 
-let UserRunRight0= require('../../../public/Images/Player/runRight/0.png');
-let UserRunRight1= require('../../../public/Images/Player/runRight/1.png');
-
-
+let UserRunRight0= require('../../public/Images/Player/runRight/0.png');
+let UserRunRight1= require('../../public/Images/Player/runRight/1.png');
 
 
-module.exports = class Player extends DinamicElementClass{
+
+
+class Player extends DinamicElement{
     constructor(props){
         super(props.position);
 
@@ -61,46 +62,21 @@ module.exports = class Player extends DinamicElementClass{
     
     
     ProcessMoviment=()=>{
-        let [firstMosaic,secondMosaic,thirdMosaic]  = this.getCollisionableBlocksForPosition(this.LevelMosaicsDistance,this.position);
 
-        // verify if user is in moviment and not collision with blocks
-        if(this.inMoviment.right && !(
-            this.verify.collisionBlockLeft(this.LevelMosaics[firstMosaic]) ||
-            this.verify.collisionBlockLeft(this.LevelMosaics[secondMosaic]) ||
-            this.verify.collisionBlockLeft(this.LevelMosaics[thirdMosaic])
-            )
-        ){
-            this.move.right();     
+        if(this.inMoviment.right && !SystemCollision.verify.collisionBlockLeft(this)){
+            this.move.right();   
         }
 
-        // verify if user is in moviment and not collision with blocks
-        if(this.inMoviment.left && !(
-            this.verify.collisionBlockRight(this.LevelMosaics[firstMosaic]) ||
-            this.verify.collisionBlockRight(this.LevelMosaics[secondMosaic]) ||
-            this.verify.collisionBlockRight(this.LevelMosaics[thirdMosaic])
-            )
-        ){
-            this.move.left();  
+        if(this.inMoviment.left && !SystemCollision.verify.collisionBlockRight(this)){
+            this.move.left();   
         }
 
-        // verify if user is in moviment and not collision with blocks
-        if(this.inMoviment.down && !(
-            this.verify.collisionBlockTop(this.LevelMosaics[firstMosaic]) ||
-            this.verify.collisionBlockTop(this.LevelMosaics[secondMosaic]) ||
-            this.verify.collisionBlockTop(this.LevelMosaics[thirdMosaic])
-            )
-        ){
-            this.move.down();                
+        if(this.inMoviment.down && !SystemCollision.verify.collisionBlockTop(this)){
+            this.move.down();   
         }
 
-        // verify if user is in moviment and not collision with blocks
-        if(this.inMoviment.jump && !(
-            this.verify.collisionBlockBottom(this.LevelMosaics[firstMosaic]) ||
-            this.verify.collisionBlockBottom(this.LevelMosaics[secondMosaic]) ||
-            this.verify.collisionBlockBottom(this.LevelMosaics[thirdMosaic])
-            )
-        ){
-            this.move.jump();             
+        if(this.inMoviment.jump && !SystemCollision.verify.collisionBlockBottom(this)){
+            this.move.jump();   
         }
     }
     
@@ -213,3 +189,5 @@ module.exports = class Player extends DinamicElementClass{
 
 
 }
+
+export {Player};

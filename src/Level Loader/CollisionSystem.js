@@ -1,14 +1,14 @@
+import { Levels } from "../Game Elements/Levels";
+import { SolidBlock } from "../Game Elements/Blocks";
 
-
-
-module.exports = class SystemCollision{
+class SystemCollision{
     // System collision blocks items
-    LevelMosaics;
-    LevelMosaicsPosition;
-    LevelMosaicsDistance;
+    static LevelMosaics;
+    static LevelMosaicsPosition;
+    static LevelMosaicsDistance;
 
 
-    getCollisionableBlocksForPosition=(position)=>{
+    static getCollisionableBlocksForPosition=(position)=>{
         // Get position mosaic actualy
         let firstMosaic;
         for(let i=0 ;i < SystemCollision.LevelMosaicsDistance.length;i++){
@@ -48,7 +48,7 @@ module.exports = class SystemCollision{
         return [firstMosaic,SecondMosiac,thirddMosiac]
     }
 
-    getCollisionBlocks(level){
+    static getCollisionBlocks(level){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -69,7 +69,7 @@ module.exports = class SystemCollision{
                 fila.forEach((item)=>{
                     // Solid block
                     if(item == 1){
-                        Mosaic.push(new Blocks.SolidBlock(x,y,40));
+                        Mosaic.push(new SolidBlock(x,y,40));
                     }
                     
                     x += 40;
@@ -87,7 +87,7 @@ module.exports = class SystemCollision{
         return allBlocks;
     }
 
-    getCollisionBlocksLenght(level,type = false){
+    static getCollisionBlocksLenght(level,type = false){
         // verify level exist
         if(!(Levels[level - 1])){
             throw new Error('Level not exist');
@@ -124,42 +124,86 @@ module.exports = class SystemCollision{
         return Mosaic;
     }
 
-
-    verify = {
+    static verify = {
         
-        collisionBlockTop:(blocks)=>{
-            return blocks.some((block)=>{
-                return (this.position.y + this.height == block.y) && (this.position.x + this.width > block.x) && (this.position.x < block.x + block.lenght)
+        collisionBlockTop:(dinamicElement)=>{
+            let [firstMosaic,secondMosaic,thirdMosaic] = SystemCollision.getCollisionableBlocksForPosition(dinamicElement.position);
+            
+            let verificationFirstMosaic = this.LevelMosaics[firstMosaic].some((block)=>{
+                return (dinamicElement.position.y + dinamicElement.height == block.y) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
             })
+
+            let verificationSecondMosaic = this.LevelMosaics[secondMosaic].some((block)=>{
+                return (dinamicElement.position.y + dinamicElement.height == block.y) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
+            })
+
+            let verificationThirdMosaic = this.LevelMosaics[thirdMosaic].some((block)=>{
+                return (dinamicElement.position.y + dinamicElement.height == block.y) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
+            })
+
+            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
         },
 
-        collisionBlockBottom:(blocks)=>{
-            return blocks.some((block)=>{
-                return (this.position.y == block.y + block.lenght) && (this.position.x + this.width > block.x) && (this.position.x < block.x + block.lenght)
-                
+        collisionBlockBottom:(dinamicElement)=>{
+            let [firstMosaic,secondMosaic,thirdMosaic] = SystemCollision.getCollisionableBlocksForPosition(dinamicElement.position);
+            
+            let verificationFirstMosaic = this.LevelMosaics[firstMosaic].some((block)=>{
+                return (dinamicElement.position.y == block.y + block.lenght) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
             })
+
+            let verificationSecondMosaic = this.LevelMosaics[secondMosaic].some((block)=>{
+                return (dinamicElement.position.y == block.y + block.lenght) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
+            })
+
+            let verificationThirdMosaic = this.LevelMosaics[thirdMosaic].some((block)=>{
+                return (dinamicElement.position.y == block.y + block.lenght) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
+            })
+
+            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
         },
 
-        collisionBlockRight:(blocks)=>{
-            return blocks.some((block)=>{
-                return (this.position.x == block.x + block.lenght) && (this.position.y < block.y + block.lenght) && ((this.position.y > block.y)||(this.position.y + this.height > block.y))
+        collisionBlockRight:(dinamicElement)=>{
+            let [firstMosaic,secondMosaic,thirdMosaic] = SystemCollision.getCollisionableBlocksForPosition(dinamicElement.position);
+            
+            let verificationFirstMosaic = this.LevelMosaics[firstMosaic].some((block)=>{
+                return (dinamicElement.position.x == block.x + block.lenght) && (dinamicElement.position.y < block.y + block.lenght) && ((dinamicElement.position.y > block.y)||(dinamicElement.position.y + dinamicElement.height > block.y))
             })
+
+            let verificationSecondMosaic = this.LevelMosaics[secondMosaic].some((block)=>{
+                return (dinamicElement.position.x == block.x + block.lenght) && (dinamicElement.position.y < block.y + block.lenght) && ((dinamicElement.position.y > block.y)||(dinamicElement.position.y + dinamicElement.height > block.y))
+            })
+
+            let verificationThirdMosaic = this.LevelMosaics[thirdMosaic].some((block)=>{
+                return (dinamicElement.position.x == block.x + block.lenght) && (dinamicElement.position.y < block.y + block.lenght) && ((dinamicElement.position.y > block.y)||(dinamicElement.position.y + dinamicElement.height > block.y))
+            })
+
+            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
         },
 
-        collisionBlockLeft:(blocks)=>{
-            return blocks.some((block)=>{
-                return (this.position.x + this.width == block.x) && (this.position.y < block.y + block.lenght) && (this.position.y > block.y || this.position.y + this.height > block.y)
+        collisionBlockLeft:(dinamicElement)=>{
+            let [firstMosaic,secondMosaic,thirdMosaic] = SystemCollision.getCollisionableBlocksForPosition(dinamicElement.position);
+            
+            let verificationFirstMosaic = this.LevelMosaics[firstMosaic].some((block)=>{
+                return (dinamicElement.position.x + dinamicElement.width == block.x) && (dinamicElement.position.y < block.y + block.lenght) && (dinamicElement.position.y > block.y || dinamicElement.position.y + dinamicElement.height > block.y)
             })
 
+            let verificationSecondMosaic = this.LevelMosaics[secondMosaic].some((block)=>{
+               return (dinamicElement.position.x + dinamicElement.width == block.x) && (dinamicElement.position.y < block.y + block.lenght) && (dinamicElement.position.y > block.y || dinamicElement.position.y + dinamicElement.height > block.y)
+            })
+
+            let verificationThirdMosaic = this.LevelMosaics[thirdMosaic].some((block)=>{
+                return (dinamicElement.position.x + dinamicElement.width == block.x) && (dinamicElement.position.y < block.y + block.lenght) && (dinamicElement.position.y > block.y || dinamicElement.position.y + dinamicElement.height > block.y)
+            })
+
+            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
         }
 
     }
 
 
     loadForLevel = (level)=>{
-        console.log(Levels)
-        this.LevelMosaics = this.getCollisionBlocks(level)
-        this.LevelMosaicsDistance = this.getCollisionBlocksLenght(level,'distance')
+        SystemCollision.LevelMosaics = SystemCollision.getCollisionBlocks(level)
+        SystemCollision.LevelMosaicsDistance = SystemCollision.getCollisionBlocksLenght(level,'distance')
     }
 
     enable = ()=>{console.log('Activando')}
@@ -167,3 +211,5 @@ module.exports = class SystemCollision{
     disable = ()=>{}
 
 }
+
+export {SystemCollision}

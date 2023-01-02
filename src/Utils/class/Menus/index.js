@@ -1,4 +1,5 @@
-let Utils = require('../../index');
+import {existsDomElement,isDomElement} from '../../domElementsHelper/index.js';
+import {resizeWindow} from '../../window/index.js';
 
 class Menu{
     // location : location where the object will be worked , Required
@@ -6,11 +7,11 @@ class Menu{
     #domElement;
 
     constructor(location = false , domElement = false){
-        if(!location || !Utils.existsDomElement(location)){
+        if(!location || !existsDomElement(location)){
             throw new Error("Error in the constructor Menu,'location' not found or does not exist");
         }
 
-        if(!domElement || !Utils.isDomElement(domElement)){
+        if(!domElement || !isDomElement(domElement)){
             throw new Error("Error in the constructor Menu,'domElement' not found or does not exist");
         }
 
@@ -36,7 +37,7 @@ class Menu{
 
     create(){
         this.location.appendChild(this.domElement);
-        Utils.resizeWindow();
+        resizeWindow();
     }
 
     delete = ()=>{
@@ -44,7 +45,7 @@ class Menu{
     }
 
     addElements=(element)=>{
-        if(!(Utils.isDomElement(element))){
+        if(!(isDomElement(element))){
             throw new Error("need a dom element");
         }
 
@@ -55,4 +56,4 @@ class Menu{
     
 }
 
-module.exports={Menu};
+export {Menu};

@@ -1,9 +1,9 @@
-const Level = require('../../../Game Elements/Levels/index.js');
-const Utils = require('../../index.js');
-let GetForLevel= require('../../GetForLevel/index.js');
-const { staticElements } = require('../../GetForLevel/index.js');
+import { Levels } from '../Game Elements/Levels/index.js';
+import { getForLevel } from '../Utils/getForLevel/index.js';
+import { existsDomElement , createElementDom } from '../Utils/domElementsHelper/index.js';
+import {resizeWindow} from '../Utils/window/index.js';
 
-module.exports = class CanvasGame { 
+class CanvasGame { 
     #location
     #domElement
     #renderIsEnabled
@@ -13,11 +13,11 @@ module.exports = class CanvasGame {
     #CanvasDinamicElements
 
     constructor(location){
-        if(!(location && Utils.existsDomElement(location))){
+        if(!(location && existsDomElement(location))){
             throw new Error("Error in the constructor Menu,'location' not found or does not exist");
         }
         this.#location = location;   
-        this.#domElement = Utils.createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
+        this.#domElement = createElementDom({className:'canvas-container keepRadioAspect',element:'div'});
 
         this.#location.appendChild(this.#domElement);
     }
@@ -47,7 +47,7 @@ module.exports = class CanvasGame {
     
     createCanvasForLevel=(level)=>{
         // verify level exist
-        if(!(Level[level - 1])){
+        if(!(Levels[level - 1])){
             throw new Error('Level not exist');
         }
 
@@ -57,17 +57,17 @@ module.exports = class CanvasGame {
         }
 
         // add canvas elements
-        this.#CanvasStaticElements =Utils.createElementDom({className:'canvas-StaticElements',element:'canvas'});
-        this.#CanvasDinamicElements =Utils.createElementDom({className:'canvas-DinamicElements',element:'canvas'});
+        this.#CanvasStaticElements =createElementDom({className:'canvas-StaticElements',element:'canvas'});
+        this.#CanvasDinamicElements =createElementDom({className:'canvas-DinamicElements',element:'canvas'});
         
         
         // add dimentions for the container
-        this.#domElement.style.width =GetForLevel.widthCanvas(level) + "px";
+        this.#domElement.style.width =getForLevel.widthCanvas(level) + "px";
         // add dimentions for the canvas
-        this.#CanvasStaticElements.width =GetForLevel.widthCanvas(level);
+        this.#CanvasStaticElements.width =getForLevel.widthCanvas(level);
         this.#CanvasStaticElements.height =900;
         
-        this.#CanvasDinamicElements.width =GetForLevel.widthCanvas(level);
+        this.#CanvasDinamicElements.width =getForLevel.widthCanvas(level);
         this.#CanvasDinamicElements.height =900;
 
         //Add elements in the dom
@@ -75,7 +75,7 @@ module.exports = class CanvasGame {
         this.#domElement.appendChild(this.#CanvasDinamicElements);
         
         //Resize window
-        Utils.resizeWindow();
+        resizeWindow();
     }
     deleteCanvas = ()=>{
         // if canvas is not already 
@@ -172,5 +172,6 @@ module.exports = class CanvasGame {
         window.cancelAnimationFrame(this.renderElements.dinamic);
     }
 
-
 }
+
+export {CanvasGame}

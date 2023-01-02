@@ -1,9 +1,9 @@
 const MainClass = require('../../Utils/class/Menus/index.js');
-const Utils = require('../../Utils');
-const SelectableElements = require('../../Utils/class/SelecteableElements')
-const LevelLoader = require('../../Level Loader/index');
+import { SelectableElements } from '../../Utils/class/SelecteableElements';
+import { LevelLoader } from '../../Level Loader/index';
+import {createElementDom} from '../../Utils/domElementsHelper/index.js'
 
-module.exports = class LevelSelector extends MainClass.Menu{
+class LevelSelector extends MainClass.Menu{
     #LevelSelectorElements;
     // function to return home / callback
     #returnCallback
@@ -13,7 +13,7 @@ module.exports = class LevelSelector extends MainClass.Menu{
     #levelSelectorCarrusel;
 
     constructor(location,returnCallback){
-        let domElement = Utils.createElementDom({className:'levelSelector keepRadioAspect',element:'div'});
+        let domElement = createElementDom({className:'levelSelector keepRadioAspect',element:'div'});
         super(location,domElement);
         // set return function 
         this.#returnCallback =returnCallback;  
@@ -21,7 +21,6 @@ module.exports = class LevelSelector extends MainClass.Menu{
 
     create(){
         super.create();
-        Utils.resizeWindow();
         
         
         
@@ -29,19 +28,19 @@ module.exports = class LevelSelector extends MainClass.Menu{
         this.#LevelSelectorElements =  new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.domElement});
         // Create carrusel
         
-        let Carrusel = Utils.createElementDom({className:'carrusel-levels',element:'div',onClick:this.functions.selectLevels});
+        let Carrusel = createElementDom({className:'carrusel-levels',element:'div',onClick:this.functions.selectLevels});
         
         
-        this.LevelSelectorElements.addElements(Utils.createElementDom({className:'start-game',element:'button',onClick:this.functions.startGame}));
-        this.LevelSelectorElements.addElements(Utils.createElementDom({className:'exit',element:'button',onClick:this.functions.returnHome}));
+        this.LevelSelectorElements.addElements(createElementDom({className:'start-game',element:'button',onClick:this.functions.startGame}));
+        this.LevelSelectorElements.addElements(createElementDom({className:'exit',element:'button',onClick:this.functions.returnHome}));
         this.LevelSelectorElements.addElements(Carrusel);
         this.LevelSelectorElements.EnableKeys();
 
         this.#levelSelectorCarrusel = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:Carrusel})
-        this.levelSelectorCarrusel.addElements(Utils.createElementDom({className:'level',element:'div' , onClick:this.functions.returnSelectLevels}));
-        this.levelSelectorCarrusel.addElements(Utils.createElementDom({className:'level',element:'div'}));
-        this.levelSelectorCarrusel.addElements(Utils.createElementDom({className:'level',element:'div'}));
-        this.levelSelectorCarrusel.addElements(Utils.createElementDom({className:'level',element:'div'}));
+        this.levelSelectorCarrusel.addElements(createElementDom({className:'level',element:'div' , onClick:this.functions.returnSelectLevels}));
+        this.levelSelectorCarrusel.addElements(createElementDom({className:'level',element:'div'}));
+        this.levelSelectorCarrusel.addElements(createElementDom({className:'level',element:'div'}));
+        this.levelSelectorCarrusel.addElements(createElementDom({className:'level',element:'div'}));
 
     }
 
@@ -97,3 +96,5 @@ module.exports = class LevelSelector extends MainClass.Menu{
     }
 
 }
+
+export {LevelSelector}

@@ -1,10 +1,10 @@
-let Utils = require('../Utils/index.js');
-let GetForLevel= require('../Utils/GetForLevel/index.js');
-const Player = require('../Game Elements/Items/Player.js');
-const levels = require('../Game Elements/Levels/index.js');
-const CanvasGame = require('../Utils/class/CanvasGame/index.js');
-const Gravity = require('./Gravity.js');
-
+import {existsDomElement,createElementDom} from '../Utils/domElementsHelper/index.js';
+import {getForLevel} from '../Utils/getForLevel/index.js';
+import { Player } from './Player.js';
+import { Levels } from '../Game Elements/Levels/index.js';
+import { CanvasGame } from './Canvas.js';
+import { Gravity } from './Gravity.js';
+import { SystemCollision } from './CollisionSystem.js';
 
 
 
@@ -28,13 +28,14 @@ class LevelLoader{
     #gamePaused
 
     constructor(location = false , callbackFunction){
-        if(!(location && Utils.existsDomElement(location))){
+        if(!(location && existsDomElement(location))){
             throw new Error("Error in the constructor Menu,'location' not found or does not exist");
         }
         this.#location = location;
-        this.#domElement = Utils.createElementDom({className:'game-container keepRadioAspect',element:'div'});
+        this.#domElement = createElementDom({className:'game-container keepRadioAspect',element:'div'});
         this.#exitToLevelSelector  = callbackFunction;
-        this.Gravity = new Gravity()
+        this.Gravity = new Gravity();
+        this.SystemCollision = new SystemCollision();
     }
     
     create(){
@@ -84,12 +85,12 @@ class LevelLoader{
         // Load elements for the lever and push in a globar var
         dinamic:(level)=>{
             // Load personajes - enemies for level
-            this.#DinamicElements = GetForLevel.dinamicElements(level);
+            this.#DinamicElements = getForLevel.dinamicElements(level);
         },
 
         static:(level)=>{
             // Load blocks for level
-            this.#StaticElements = GetForLevel.staticElements(level);
+            this.#StaticElements = getForLevel.staticElements(level);
         },
 
         all:function(level){
@@ -102,13 +103,13 @@ class LevelLoader{
 
     loadLevelInfo=(level)=>{
         this.#levelNumber = level;
-        this.#levelName = levels[level - 1].name;
+        this.#levelName = Levels[level - 1].name;
     }
     
 
     loadLevel(level){
         // verify level exist
-        if(!(levels[level - 1])){
+        if(!(Levels[level - 1])){
             throw new Error('Level not exist');
         }
 
@@ -122,7 +123,7 @@ class LevelLoader{
         // Load level info
         this.loadLevelInfo(level);
         this.loadElements.all(level);
-
+        this.SystemCollision.loadForLevel(level)
         
         // Start game 
         this.startGame();
@@ -209,24 +210,19 @@ class LevelLoader{
             this.#DinamicElements.forEach((element)=>{
                 // If is a player enable keys
                 if(element instanceof Player){
-                    element.EnableKeys();
-                    
+                    element.EnableKeys();                    
                 }
             })
         }
     }
 
     colissionSystemInDinamicElements={
-        disable:()=>{},
+        disable:()=>{
+            this.SystemCollision.disable();
+        },
 
         enable:()=>{
-                // Enable Collision system
-            this.#DinamicElements.forEach((element)=>{
-                // If is a player enable keys
-                if(element instanceof Player){
-                    element.loadColisionSystem(GetForLevel.collisionBlocks(this.levelNumber),GetForLevel.collisionBlocksLenght(this.levelNumber,'distance') );
-                }
-            })
+            this.SystemCollision.enable();
         }
     }
     
@@ -275,4 +271,4 @@ class LevelLoader{
 
 }
 
-module.exports = LevelLoader
+export {LevelLoader}

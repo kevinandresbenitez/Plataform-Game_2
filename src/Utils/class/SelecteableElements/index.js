@@ -1,7 +1,6 @@
-let Utils = require('../../index.js');
+import { existsDomElement ,isDomElement} from '../../domElementsHelper/index.js'
 
-
-module.exports = class SelectableElements{
+class SelectableElements{
     #location;
 
     #elements = [];
@@ -17,7 +16,7 @@ module.exports = class SelectableElements{
         
         // Verifi location from the items selectionables
         let {location} = props || false;
-        if(!location || !Utils.existsDomElement(location)){
+        if(!location || !existsDomElement(location)){
             throw new Error("Error in the constructor SelecteableMenu,'location' not found or does not exist");
         }
         this.#location = props.location;
@@ -35,7 +34,7 @@ module.exports = class SelectableElements{
     }
 
     addElements=(element)=>{
-        if(Utils.isDomElement(element)){
+        if(isDomElement(element)){
             this.#elements.push(element);
             this.location.appendChild(element)
         }else{
@@ -105,3 +104,5 @@ module.exports = class SelectableElements{
 
 
 }
+
+export {SelectableElements}

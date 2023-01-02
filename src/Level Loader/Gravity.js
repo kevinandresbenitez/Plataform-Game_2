@@ -1,4 +1,6 @@
-module.exports = class Gravity {
+import { SystemCollision } from "./CollisionSystem";
+
+class Gravity {
     intervalFunction;
     static Elements = [] ;
 
@@ -8,23 +10,12 @@ module.exports = class Gravity {
 
     runGravity=()=>{
         let Elements = Gravity.Elements.filter(element => {return element.gravityConfig.isEnabled});
-        
-        Elements.forEach((elementWithGravityEnable)=>{
 
-            let [firstMosaic,secondMosaic,thirdMosaic] = elementWithGravityEnable.getCollisionableBlocksForPosition(elementWithGravityEnable.LevelMosaicsDistance,elementWithGravityEnable.position);
-            
-            // verify if the element collision with floor
-            if( !(
-                elementWithGravityEnable.verify.collisionBlockTop(elementWithGravityEnable.LevelMosaics[firstMosaic]) ||
-                elementWithGravityEnable.verify.collisionBlockTop(elementWithGravityEnable.LevelMosaics[secondMosaic]) ||
-                elementWithGravityEnable.verify.collisionBlockTop(elementWithGravityEnable.LevelMosaics[thirdMosaic])
-                )
-            ){
-                elementWithGravityEnable.position.y += elementWithGravityEnable.gravityConfig.speed;
+        Elements.forEach((elementWithGravity)=>{
+            if (!SystemCollision.verify.collisionBlockTop(elementWithGravity)){
+                elementWithGravity.position.y += elementWithGravity.gravityConfig.speed;
             }
-
-        });
-
+        })
     }
 
     enable=()=>{
@@ -36,3 +27,5 @@ module.exports = class Gravity {
     }
 
 }
+
+export {Gravity}

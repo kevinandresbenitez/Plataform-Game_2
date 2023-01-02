@@ -59,4 +59,4 @@ class NoSolidBlock extends Block{
 
 }
 
-module.exports={SolidBlock,NoSolidBlock}
+export {SolidBlock,NoSolidBlock}

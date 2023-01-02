@@ -1,5 +1,5 @@
-const Utils = require('./Utils/index.js');
-const Home = require('./Menus/Home/index.js');
+import {resizeWindow} from './Utils/window/index.js';
+import {Home} from './Menus/Home/index.js';
 
 
 // Import css Styles
@@ -22,5 +22,5 @@ main.init();
 
 
 // On document load 
-window.addEvent//Listener('load',()=>{Utils.resizeWindow()})
-window.addEventListener('resize',(event)=>{Utils.resizeWindow()})
+window.addEventListener('load',()=>{resizeWindow()})
+window.addEventListener('resize',(event)=>{resizeWindow()})

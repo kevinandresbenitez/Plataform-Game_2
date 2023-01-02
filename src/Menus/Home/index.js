@@ -1,17 +1,17 @@
 const MainClass = require('../../Utils/class/Menus/index.js');
-const Utils = require('../../Utils');
-const HomeConfig = require('../HomeConfig');
-const LevelSelector = require('../LevelSelector');
-const SelectableElements = require('../../Utils/class/SelecteableElements');
+import { SelectableElements } from '../../Utils/class/SelecteableElements';
+import {createElementDom} from '../../Utils/domElementsHelper/index.js'
+import {HomeConfig} from '../HomeConfig/index.js';
+import {LevelSelector} from '../LevelSelector/index.js';
 
 // Sections
-module.exports = class Home extends MainClass.Menu{
+class Home extends MainClass.Menu{
     // Dom element created for the class
     #MenuElements;
 
     constructor(location){
         // Create the dom element
-        let domElement = Utils.createElementDom({className:'home keepRadioAspect',element:'div'});
+        let domElement = createElementDom({className:'home keepRadioAspect',element:'div'});
         super(location,domElement);
         
     }
@@ -23,8 +23,8 @@ module.exports = class Home extends MainClass.Menu{
         // Add selecteableElements
         this.#MenuElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.domElement});
         // Add items
-        this.MenuElements.addElements(Utils.createElementDom({className:'btn-init',element:'button',onClick:this.functions.openLevelSelector}));
-        this.MenuElements.addElements(Utils.createElementDom({className:'btn-config',element:'button',onClick:this.functions.openConfig}));
+        this.MenuElements.addElements(createElementDom({className:'btn-init',element:'button',onClick:this.functions.openLevelSelector}));
+        this.MenuElements.addElements(createElementDom({className:'btn-config',element:'button',onClick:this.functions.openConfig}));
         this.MenuElements.EnableKeys();
     }
 
@@ -59,3 +59,5 @@ module.exports = class Home extends MainClass.Menu{
     }
     
 }
+
+export {Home}

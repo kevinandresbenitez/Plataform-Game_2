@@ -1,6 +1,6 @@
-let Player = require('../Items/Player.js');
+import { Player } from "../../Level Loader/Player.js"
 
-let levels =[
+const Levels =[
     {
         name:'Level 1',
         userPositions:{
@@ -205,4 +205,4 @@ let levels =[
     },{},{},{}
 ]
 
-module.exports = levels
+export {Levels}

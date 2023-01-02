@@ -1,13 +1,13 @@
 const MainClass = require('../../Utils/class/Menus/index.js');
-const Utils = require('../../Utils');
-const SelectableElements = require('../../Utils/class/SelecteableElements');
+import { SelectableElements } from '../../Utils/class/SelecteableElements';
+import {createElementDom} from '../../Utils/domElementsHelper/index.js'
 
-module.exports = class HomeConfig extends MainClass.Menu{
+class HomeConfig extends MainClass.Menu{
     #ConfigElements
     #returnCallback;
     
     constructor(location,returnCallback){
-        let domElement = Utils.createElementDom({className:'config modal',element:'div'});
+        let domElement = createElementDom({className:'config modal',element:'div'});
         super(location,domElement);
 
         // set return function 
@@ -18,9 +18,9 @@ module.exports = class HomeConfig extends MainClass.Menu{
         super.create();
         // Create Items in the config
         this.#ConfigElements = new SelectableElements({keys:{KeySelectPrev:'ArrowLeft',KeySelectNext:'ArrowRight',Open:'Enter'},class:'selected',location:this.domElement});
-        this.ConfigElements.addElements(Utils.createElementDom({className:'item',element:'button',onClick:this.deleteModal}));
-        this.addElements(Utils.createElementDom({className:'item title',element:'div'}));
-        this.ConfigElements.addElements(Utils.createElementDom({className:'item',element:'button'}));
+        this.ConfigElements.addElements(createElementDom({className:'item',element:'button',onClick:this.deleteModal}));
+        this.addElements(createElementDom({className:'item title',element:'div'}));
+        this.ConfigElements.addElements(createElementDom({className:'item',element:'button'}));
         this.ConfigElements.EnableKeys();
     }
 
@@ -38,3 +38,5 @@ module.exports = class HomeConfig extends MainClass.Menu{
     }
 
 }
+
+export {HomeConfig}
