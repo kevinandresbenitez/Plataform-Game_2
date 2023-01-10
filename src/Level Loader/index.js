@@ -5,7 +5,7 @@ import { Levels } from '../Game Elements/Levels/index.js';
 import { CanvasGame } from './Canvas.js';
 import { Gravity } from './Gravity.js';
 import { SystemCollision } from './CollisionSystem.js';
-
+import { Renderer } from './Renderer.js';
 
 
 class LevelLoader{
@@ -34,20 +34,16 @@ class LevelLoader{
         this.#location = location;
         this.#domElement = createElementDom({className:'game-container keepRadioAspect',element:'div'});
         this.#exitToLevelSelector  = callbackFunction;
+        this.location.appendChild(this.domElement);
         this.Gravity = new Gravity();
         this.SystemCollision = new SystemCollision();
-    }
-    
-    create(){
-        this.location.appendChild(this.domElement);
-        // Create canvas manajer
         this.#Canvas = new CanvasGame(this.domElement);
+        this.Renderer = new Renderer(this.#Canvas);
     }
     
     delete(){
         this.location.removeChild(this.domElement);
-        this.#Canvas.delete();
-        
+        this.#Canvas.delete();       
     }
 
     get exitToLevelSelector(){
@@ -187,10 +183,6 @@ class LevelLoader{
                 }
             }
         }
-
-
-
-
     }
     // Keys from the user or other elements dinamics
     keysInDinamicElements ={
@@ -238,36 +230,16 @@ class LevelLoader{
     
     RenderSystemInElements={
         disable:()=>{
-            this.#Canvas.renderIsEnabled =false;
-            this.#Canvas.stopRender();
+           this.Renderer.disable();
         },
 
         enable:()=>{
             // Load elements in canvas
-            this.#Canvas.renderIsEnabled =true;
-            this.#Canvas.renderElements.static(this.getStaticElementsFromBlocks(this.#StaticElements));
-            this.#Canvas.renderElements.dinamic(this.#DinamicElements);
+            this.Renderer.enable();
+            this.Renderer.renderElements.static(this.#StaticElements.flat());
+            this.Renderer.renderElements.dinamic(this.#DinamicElements.flat());
         }
-
-
     }
-
-    
-
-
-    getStaticElementsFromBlocks(blocs){
-        let staticElements =[];
-
-        blocs.forEach((mosaic)=>{
-            return mosaic.forEach((item)=>{
-                staticElements.push(item);
-            })
-        });
-
-        return staticElements;
-    }
-
-
 
 }
 

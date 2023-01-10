@@ -71,13 +71,11 @@ class LevelSelector extends MainClass.Menu{
             
             // Load Level
             this.main =  new LevelLoader(document.querySelector('.container'),this.functions.returnLevelSelectorMenuCallback);
-            this.main.create();
             this.main.loadLevel(1);
         },
 
         returnLevelSelectorMenuCallback:()=>{
-            this.create();
-            
+            this.create();            
         }
 
     }

@@ -6,6 +6,7 @@ class SystemCollision{
     static LevelMosaics;
     static LevelMosaicsPosition;
     static LevelMosaicsDistance;
+    static IsEnabled;
 
 
     static getCollisionableBlocksForPosition=(position)=>{
@@ -141,7 +142,7 @@ class SystemCollision{
                 return (dinamicElement.position.y + dinamicElement.height == block.y) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
             })
 
-            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
+            return ((verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic) && this.IsEnabled)
         },
 
         collisionBlockBottom:(dinamicElement)=>{
@@ -159,7 +160,7 @@ class SystemCollision{
                 return (dinamicElement.position.y == block.y + block.lenght) && (dinamicElement.position.x + dinamicElement.width > block.x) && (dinamicElement.position.x < block.x + block.lenght)
             })
 
-            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
+            return ((verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic) && this.IsEnabled)
         },
 
         collisionBlockRight:(dinamicElement)=>{
@@ -177,7 +178,7 @@ class SystemCollision{
                 return (dinamicElement.position.x == block.x + block.lenght) && (dinamicElement.position.y < block.y + block.lenght) && ((dinamicElement.position.y > block.y)||(dinamicElement.position.y + dinamicElement.height > block.y))
             })
 
-            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
+            return ((verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic) && this.IsEnabled)
         },
 
         collisionBlockLeft:(dinamicElement)=>{
@@ -195,7 +196,7 @@ class SystemCollision{
                 return (dinamicElement.position.x + dinamicElement.width == block.x) && (dinamicElement.position.y < block.y + block.lenght) && (dinamicElement.position.y > block.y || dinamicElement.position.y + dinamicElement.height > block.y)
             })
 
-            return (verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic)
+            return ((verificationFirstMosaic || verificationSecondMosaic || verificationThirdMosaic) && this.IsEnabled)
         }
 
     }
@@ -206,9 +207,13 @@ class SystemCollision{
         SystemCollision.LevelMosaicsDistance = SystemCollision.getCollisionBlocksLenght(level,'distance')
     }
 
-    enable = ()=>{console.log('Activando')}
+    enable = ()=>{
+        SystemCollision.IsEnabled = true ;
+    }
 
-    disable = ()=>{}
+    disable = ()=>{
+        SystemCollision.IsEnabled = false ;
+    }
 
 }
 

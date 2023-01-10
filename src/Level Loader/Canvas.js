@@ -6,7 +6,6 @@ import {resizeWindow} from '../Utils/window/index.js';
 class CanvasGame { 
     #location
     #domElement
-    #renderIsEnabled
 
     //Containers
     #CanvasStaticElements
@@ -25,14 +24,6 @@ class CanvasGame {
     delete=()=>{
         this.#location.removeChild(this.#domElement);
     }
-
-    set renderIsEnabled(value){
-        this.#renderIsEnabled = value;
-    }
-    get renderIsEnabled(){
-        return this.#renderIsEnabled;
-    }
-
     get CanvasStaticElements(){
         return this.#CanvasStaticElements;
     }
@@ -77,6 +68,7 @@ class CanvasGame {
         //Resize window
         resizeWindow();
     }
+
     deleteCanvas = ()=>{
         // if canvas is not already 
         if(!this.canvasIscreated()){
@@ -126,51 +118,6 @@ class CanvasGame {
         }
     }
 
-    async getFramesForDinamicElements(DinamicElements){
-        return await Promise.all(
-            DinamicElements.map((item)=>{return item.getFrame()})
-        );   
-    }
-
-
-    async getFramesForStaticElements(StaticElements){
-        return await Promise.all(
-            StaticElements.map((item)=>{return item.getFrame()})
-        );
-    }
-
-
-    renderElements={
-
-        dinamic:async(DinamicElements)=>{
-
-                // Get frames for all dinamic elements
-            let FramesDinamicItems = await this.getFramesForDinamicElements(DinamicElements);
-
-            // draw Images on load 
-            this.drawFrames.dinamic(FramesDinamicItems);
-            
-    
-            // Images are loaded and are draw, render new frame
-            if(FramesDinamicItems && this.renderIsEnabled){
-                window.requestAnimationFrame(()=>{
-                    this.renderElements.dinamic(DinamicElements);
-                });
-            }
-    
-        },
-
-        static:async (staticElements)=>{
-            let framesForStaticElements =await this.getFramesForStaticElements(staticElements);
-
-            // Render static elements
-            this.drawFrames.static(framesForStaticElements)
-        }
-
-    }
-    stopRender=()=>{
-        window.cancelAnimationFrame(this.renderElements.dinamic);
-    }
 
 }
 
